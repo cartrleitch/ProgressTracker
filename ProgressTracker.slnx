@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="progresstracker.client/progresstracker.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="ProgressTracker.Server/ProgressTracker.Server.csproj" />
+</Solution>
