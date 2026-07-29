@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 export interface Goal {
     id: number;
     name: string;
@@ -17,8 +17,23 @@ export function GoalItem({ goal }: { goal: Goal }) {
         console.log(`Edit goal with ID: ${goal.id}`);
     };
 
-    const handleDelete = () => {
-        console.log(`Delete goal with ID: ${goal.id}`);
+    const handleDelete = async () => {
+        try {
+            const response = await fetch('/api/goals', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: goal.id }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to delete goal: ${response.status}`);
+            }
+
+            const deleted = await response.json();
+            console.log('Deleted goal:', deleted);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -38,16 +53,61 @@ export function GoalItem({ goal }: { goal: Goal }) {
             <div className="goal-progress-bottom-row">
                 <div className="goal-progress-actions">
                     <button type="button" className="goal-edit-button" onClick={handleEdit}>
-                        <img src="/public/edit.png" alt="Edit" className="goal-action-icon" />
+                        <img src="/edit.png" alt="Edit" className="goal-action-icon" />
                     </button>
                     <button type="button" className="goal-delete-button" onClick={handleDelete}>
-                        <img src="/public/delete.png" alt="Delete" className="goal-action-icon" />
+                        <img src="/delete.png" alt="Delete" className="goal-action-icon" />
                     </button>
                 </div>
                 <div className="goal-progress-label-percentage">
                     {goal.currentValue} / {goal.targetValue} ({percent}%)
                 </div>
             </div>
+        </div>
+    );
+}
+
+export function GoalList() {
+    const [goals, setGoals] = useState<Goal[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchGoals = async () => {
+            try {
+                const response = await fetch('/api/goals');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch goals: ${response.status}`);
+                }
+                const data: Goal[] = await response.json();
+                setGoals(data);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to load goals');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchGoals();
+    }, []);
+
+    if (isLoading) {
+        return <p>Loading goals...</p>;
+    }
+
+    if (error) {
+        return <p className="goal-list-error">{error}</p>;
+    }
+
+    if (goals.length === 0) {
+        return <p>No goals yet. Create one to get started!</p>;
+    }
+
+    return (
+        <div className="goal-list">
+            {goals.map((goal) => (
+                <GoalItem key={goal.id} goal={goal} />
+            ))}
         </div>
     );
 }

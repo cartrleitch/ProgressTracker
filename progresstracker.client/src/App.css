@@ -260,3 +260,7 @@ th, td {
 .create-goal-cancel-button:active {
     transform: scale(0.97);
 }
+
+.goal-list-error {
+    color: #b91c1c;
+}

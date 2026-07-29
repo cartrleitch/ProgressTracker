@@ -1,5 +1,6 @@
 import { CreateGoalButton } from './Components';
 import { GoalItem } from './Components';
+import { GoalList } from './Components';
 import './App.css';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
             <div>
                 <h1 id="tableLabel">Progress Tracker</h1>
                 <CreateGoalButton />
+                <GoalList />
                 <GoalItem goal={{ id: 1, name: 'Test Goal', targetValue: 100, currentValue: 76, period: 'Monthly' }} />
                 <GoalItem goal={{ id: 2, name: 'Test Goal 2', targetValue: 5, currentValue: 2, period: 'Daily' }} />
             </div>
