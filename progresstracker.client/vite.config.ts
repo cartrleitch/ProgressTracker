@@ -52,7 +52,7 @@ export default defineConfig(({ command }) => {
         },
         server: isServe ? {
             proxy: {
-                '^/weatherforecast': {
+                '^/api': {
                     target,
                     secure: false
                 }

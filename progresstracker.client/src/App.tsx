@@ -7,8 +7,7 @@ function App() {
     return (
         <div>
             <div>
-                <h1 id="tableLabel">Test</h1>
-                <p>Test</p>
+                <h1 id="tableLabel">Progress Tracker</h1>
                 <CreateGoalButton />
                 <GoalItem goal={{ id: 1, name: 'Test Goal', targetValue: 100, currentValue: 76, period: 'Monthly' }} />
                 <GoalItem goal={{ id: 2, name: 'Test Goal 2', targetValue: 5, currentValue: 2, period: 'Daily' }} />

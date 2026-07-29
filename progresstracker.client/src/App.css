@@ -23,6 +23,7 @@ th, td {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
+    width: 35%;
 }
 
     .create-goal-button:hover {
@@ -178,4 +179,84 @@ th, td {
     height: 24px;
     object-fit: contain;
     pointer-events: none;
+}
+
+.create-goal-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.create-goal-input,
+.create-goal-select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.create-goal-input:focus,
+.create-goal-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.create-goal-input {
+    flex: 1 1 160px;
+    min-width: 120px;
+}
+
+.create-goal-select {
+    flex: 0 1 130px;
+    cursor: pointer;
+}
+
+.create-goal-form-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.create-goal-save-button,
+.create-goal-cancel-button {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.create-goal-save-button {
+    color: #e7e8f2;
+    background-color: #162d7a;
+}
+
+.create-goal-save-button:hover {
+    background-color: #1e3a97;
+}
+
+.create-goal-cancel-button {
+    color: #475569;
+    background-color: #e2e8f0;
+}
+
+.create-goal-cancel-button:hover {
+    background-color: #cbd5e1;
+}
+
+.create-goal-save-button:active,
+.create-goal-cancel-button:active {
+    transform: scale(0.97);
 }
