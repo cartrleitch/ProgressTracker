@@ -8,7 +8,7 @@ export interface Goal {
     period: string;
 }
 
-export function GoalItem({ goal }: { goal: Goal }) {
+export function GoalItem({ goal, onDelete }: { goal: Goal, onDelete: (id: number) => void }) {
     const percent = goal.targetValue > 0
         ? Math.min(100, Math.round((goal.currentValue / goal.targetValue) * 100))
         : 0;
@@ -18,22 +18,25 @@ export function GoalItem({ goal }: { goal: Goal }) {
     };
 
     const handleDelete = async () => {
+        if (!window.confirm(`Are you sure you want to delete the goal "${goal.name}"?`)) {
+            return;
+        }
+
         try {
-            const response = await fetch('/api/goals', {
+            const response = await fetch(`/api/goals/${goal.id}`, {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: goal.id }),
             });
 
             if (!response.ok) {
                 throw new Error(`Failed to delete goal: ${response.status}`);
             }
 
-            const deleted = await response.json();
-            console.log('Deleted goal:', deleted);
+            onDelete(goal.id);
+            console.log('Deleted goal:', goal.id);
         } catch (error) {
             console.error(error);
         }
+        
     };
 
     return (
@@ -67,7 +70,7 @@ export function GoalItem({ goal }: { goal: Goal }) {
     );
 }
 
-export function GoalList() {
+export function GoalList({ refresh }: {refresh: number}) {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -89,7 +92,7 @@ export function GoalList() {
         };
 
         fetchGoals();
-    }, []);
+    }, [refresh]);
 
     if (isLoading) {
         return <p>Loading goals...</p>;
@@ -103,16 +106,20 @@ export function GoalList() {
         return <p>No goals yet. Create one to get started!</p>;
     }
 
+    const handleGoalDeleted = (id: number) => {
+        setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
+            };
+
     return (
         <div className="goal-list">
             {goals.map((goal) => (
-                <GoalItem key={goal.id} goal={goal} />
+                <GoalItem key={goal.id} goal={goal} onDelete={handleGoalDeleted} />
             ))}
         </div>
     );
 }
 
-export function CreateGoalButton() {
+export function CreateGoalButton({ onGoalCreated }: { onGoalCreated: (goal: Goal) => void }) {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [name, setName] = useState('');
     const [targetValue, setTargetValue] = useState('');
@@ -145,6 +152,7 @@ export function CreateGoalButton() {
             setName('');
             setTargetValue('');
             setPeriod('Daily');
+            onGoalCreated(created);
         } catch (error) {
             console.error(error);
         }
@@ -184,6 +192,7 @@ export function CreateGoalButton() {
                 <option value="Daily">Daily</option>
                 <option value="Weekly">Weekly</option>
                 <option value="Monthly">Monthly</option>
+                <option value="Yearly">Yearly</option>
             </select>
             <div className="create-goal-form-actions">
                 <button type="submit" className="create-goal-save-button">Save</button>
