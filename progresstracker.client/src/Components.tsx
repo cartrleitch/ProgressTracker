@@ -8,12 +8,49 @@ export interface Goal {
     period: string;
 }
 
-export function GoalItem({ goal, onDelete }: { goal: Goal, onDelete: (id: number) => void }) {
+export function GoalItem({ goal, onDelete, onEdit }: { goal: Goal, onDelete: (id: number) => void, onEdit: (goal: Goal) => void }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [name, setName] = useState(goal.name);
+    const [targetValue, setTargetValue] = useState(goal.targetValue);
+    const [period, setPeriod] = useState(goal.period);
+
     const percent = goal.targetValue > 0
         ? Math.min(100, Math.round((goal.currentValue / goal.targetValue) * 100))
         : 0;
 
-    const handleEdit = () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const newGoal = {
+            id: goal.id,
+            name,
+            targetValue: Number(targetValue),
+            currentValue: goal.currentValue,
+            period,
+        };
+
+        try {
+            const response = await fetch(`/api/goals/${goal.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newGoal),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update goal: ${response.status}`);
+            }
+
+            console.log('Updated goal:', newGoal);
+            setIsEditing(false);
+            onEdit(newGoal);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleEdit = async () => {
+
+        setIsEditing(true);
+
         console.log(`Edit goal with ID: ${goal.id}`);
     };
 
@@ -36,8 +73,47 @@ export function GoalItem({ goal, onDelete }: { goal: Goal, onDelete: (id: number
         } catch (error) {
             console.error(error);
         }
-        
+
     };
+
+    if (isEditing) {
+        return (
+            <form className="create-goal-form" onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    className="create-goal-input"
+                    placeholder="Goal name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                />
+                <input
+                    type="number"
+                    className="create-goal-input"
+                    placeholder="Target value"
+                    value={targetValue}
+                    onChange={(e) => setTargetValue(Number(e.target.value))}
+                    required
+                />
+                <select
+                    className="create-goal-select"
+                    value={period}
+                    onChange={(e) => setPeriod(e.target.value)}
+                >
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Yearly">Yearly</option>
+                </select>
+                <div className="create-goal-form-actions">
+                    <button type="submit" className="create-goal-save-button">Save</button>
+                    <button type="button" className="create-goal-cancel-button" onClick={() => setIsEditing(false)}>
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        );
+    }
 
     return (
         <div className="goal-item">
@@ -70,7 +146,7 @@ export function GoalItem({ goal, onDelete }: { goal: Goal, onDelete: (id: number
     );
 }
 
-export function GoalList({ refresh }: {refresh: number}) {
+export function GoalList({ refresh }: { refresh: number }) {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -108,12 +184,16 @@ export function GoalList({ refresh }: {refresh: number}) {
 
     const handleGoalDeleted = (id: number) => {
         setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
-            };
+    };
+
+    const handleEdit = (updatedGoal: Goal) => {
+        setGoals((prevGoals) => prevGoals.map((goal) => (goal.id === updatedGoal.id ? updatedGoal : goal)));
+    };
 
     return (
         <div className="goal-list">
             {goals.map((goal) => (
-                <GoalItem key={goal.id} goal={goal} onDelete={handleGoalDeleted} />
+                <GoalItem key={goal.id} goal={goal} onDelete={handleGoalDeleted} onEdit={handleEdit} />
             ))}
         </div>
     );

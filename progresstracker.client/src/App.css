@@ -1,9 +1,21 @@
-﻿#root {
+﻿html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#root {
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
     background-color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-content {
+    flex: 1;
 }
 
 th, td {
