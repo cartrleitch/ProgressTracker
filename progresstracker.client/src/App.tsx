@@ -17,7 +17,7 @@ function App() {
                 <h1 id="tableLabel">Progress Tracker</h1>
                 <CreateGoalButton onGoalCreated={handleGoalCreated} />
                 <GoalList refresh={refresh} />
-                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 100, currentValue: 50, period: 'Daily' }} onEdit={() => { }} onDelete={() => { }} />
+                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 10, currentValue: 5, period: 'Daily' }} onEdit={() => { }} onDelete={() => { }} />
             </div>
 
             <footer>

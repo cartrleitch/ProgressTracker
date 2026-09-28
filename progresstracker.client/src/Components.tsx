@@ -101,7 +101,7 @@ export function GoalItem({
   };
 
   const handleIncrement = () => {
-    const newCurrentValue = Math.min(goal.targetValue, currentValue + 1);
+    const newCurrentValue = currentValue + 1;
     setCurrentValue(newCurrentValue);
     if (newCurrentValue !== goal.currentValue) {
       setIsSaved(false);
