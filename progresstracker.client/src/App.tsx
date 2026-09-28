@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CreateGoalButton } from './Components';
+import { CreateGoalButton, GoalItem } from './Components';
 import { GoalList } from './Components';
 import './App.css';
 
@@ -17,6 +17,7 @@ function App() {
                 <h1 id="tableLabel">Progress Tracker</h1>
                 <CreateGoalButton onGoalCreated={handleGoalCreated} />
                 <GoalList refresh={refresh} />
+                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 100, currentValue: 50, period: 'Daily' }} onEdit={() => { }} onDelete={() => { }} />
             </div>
 
             <footer>

@@ -138,6 +138,69 @@ th, td {
     align-items: center;
     margin-top: 0.2rem;
 }
+.goal-progress-elements {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 20%;
+}
+.goal-progress-decrement-button {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+    .goal-progress-decrement-button:hover {
+        background-color: #cbd5e1;
+    }
+
+    .goal-progress-decrement-button:active {
+        transform: scale(0.95);
+    }
+.goal-progress-increment-button {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+
+    .goal-progress-increment-button:hover {
+        background-color: #cbd5e1;
+    }
+
+    .goal-progress-increment-button:active {
+        transform: scale(0.95);
+    }
+
+.goal-progress-save-button {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    background-color: #162d7a;
+    color: #e7e8f2;
+}
+
+.goal-progress-save-button:hover {
+    background-color: #1e3a97;
+}
+
+.goal-progress-save-button:active {
+    transform: scale(0.97);
+}
 
 .goal-progress-label-percentage {
     font-size: 0.85rem;
