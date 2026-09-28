@@ -22,6 +22,7 @@ export function GoalItem({
   const [targetValue, setTargetValue] = useState(goal.targetValue);
   const [period, setPeriod] = useState(goal.period);
   const [currentValue, setCurrentValue] = useState(goal.currentValue);
+  const [isSaved, setIsSaved] = useState(true);
 
   const percent =
     goal.targetValue > 0
@@ -91,11 +92,22 @@ export function GoalItem({
   const handleDecrement = () => {
     const newCurrentValue = Math.max(0, currentValue - 1);
     setCurrentValue(newCurrentValue);
+
+    if (newCurrentValue !== goal.currentValue) {
+      setIsSaved(false);
+    } else {
+      setIsSaved(true);
+    }
   };
 
   const handleIncrement = () => {
     const newCurrentValue = Math.min(goal.targetValue, currentValue + 1);
     setCurrentValue(newCurrentValue);
+    if (newCurrentValue !== goal.currentValue) {
+      setIsSaved(false);
+    } else {
+      setIsSaved(true);
+    }
   };
 
   const handleSaveProgress = async () => {
@@ -113,6 +125,7 @@ export function GoalItem({
       }
 
       console.log("Updated goal progress:", { ...goal, currentValue });
+      setIsSaved(true);
     } catch (error) {
       console.error(error);
     }
@@ -173,13 +186,13 @@ export function GoalItem({
       <div className="goal-progress-bar">
         <div
           className={
-            goal.currentValue < 0.25 * goal.targetValue
+            currentValue < 0.25 * goal.targetValue
               ? "goal-progress-fill-25"
-              : goal.currentValue < 0.5 * goal.targetValue
+              : currentValue < 0.5 * goal.targetValue
                 ? "goal-progress-fill-50"
-                : goal.currentValue < 0.75 * goal.targetValue
+                : currentValue < 0.75 * goal.targetValue
                   ? "goal-progress-fill-75"
-                  : goal.currentValue < goal.targetValue
+                  : currentValue < goal.targetValue
                     ? "goal-progress-fill-100"
                     : "goal-progress-fill-complete"
           }
@@ -205,7 +218,7 @@ export function GoalItem({
           </button>
         </div>
         <div>
-          {currentValue !== goal.currentValue && (
+          {!isSaved && (
             <button
               type="button"
               className="goal-progress-save-button"

@@ -147,7 +147,7 @@ th, td {
 .goal-progress-decrement-button {
     padding: 0.2rem 0.5rem;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 1000;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -165,7 +165,7 @@ th, td {
 .goal-progress-increment-button {
     padding: 0.2rem 0.5rem;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 1000;
     border: none;
     border-radius: 6px;
     cursor: pointer;
