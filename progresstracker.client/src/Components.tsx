@@ -138,8 +138,12 @@ export function GoalItem({ goal, onDelete, onEdit }: { goal: Goal, onDelete: (id
                         <img src="/delete.png" alt="Delete" className="goal-action-icon" />
                     </button>
                 </div>
-                <div className="goal-progress-label-percentage">
-                    {goal.currentValue} / {goal.targetValue} ({percent}%)
+                <div className="goal-progress-elements">
+                    <button type="button" className="goal-progress-decrement-button"></button>
+                    <div className="goal-progress-label-percentage">
+                        {goal.currentValue} / {goal.targetValue} ({percent}%)
+                    </div>
+                    <button type="button" className="goal-progress-increment-button"></button>
                 </div>
             </div>
         </div>
