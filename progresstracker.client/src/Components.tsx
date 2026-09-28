@@ -6,6 +6,8 @@ export interface Goal {
   targetValue: number;
   currentValue: number;
   period: string;
+  type: string;
+  unit: string;
 }
 
 export function GoalItem({
@@ -22,6 +24,8 @@ export function GoalItem({
   const [targetValue, setTargetValue] = useState(goal.targetValue);
   const [period, setPeriod] = useState(goal.period);
   const [currentValue, setCurrentValue] = useState(goal.currentValue);
+  const [type] = useState(goal.type);
+  const [unit, setUnit] = useState(goal.unit);
   const [isSaved, setIsSaved] = useState(true);
 
   const percent =
@@ -37,6 +41,8 @@ export function GoalItem({
       targetValue: Number(targetValue),
       currentValue,
       period,
+      type,
+      unit,
     };
 
     try {
@@ -150,6 +156,14 @@ export function GoalItem({
           onChange={(e) => setTargetValue(Number(e.target.value))}
           required
         />
+        <input
+          type="text"
+          className="create-goal-input"
+          placeholder="Unit"
+          value={unit}
+          onChange={(e) => setUnit(e.target.value)}
+          required
+        />
         <select
           className="create-goal-select"
           value={period}
@@ -238,7 +252,7 @@ export function GoalItem({
             -
           </button>
           <div className="goal-progress-label-percentage">
-            {currentValue} / {goal.targetValue} ({percent}%)
+            {currentValue} / {goal.targetValue} {unit} ({percent}%)
           </div>
           <button
             type="button"
@@ -324,6 +338,8 @@ export function CreateGoalButton({
   const [name, setName] = useState("");
   const [targetValue, setTargetValue] = useState("");
   const [period, setPeriod] = useState("Daily");
+  const [type, setType] = useState("Numeric");
+  const [unit, setUnit] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -333,6 +349,8 @@ export function CreateGoalButton({
       targetValue: Number(targetValue),
       currentValue: 0,
       period,
+      type,
+      unit,
     };
 
     try {
@@ -388,6 +406,26 @@ export function CreateGoalButton({
         onChange={(e) => setTargetValue(e.target.value)}
         required
       />
+      <select
+        className="create-goal-select"
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+      >
+        <option value="Numeric">Numeric</option>
+        <option value="Checkbox">Checkbox</option>
+        <option value="Time">Time</option>
+        <option value="Amount">Amount</option>
+      </select>
+        {(type === "Amount" || type === "Time") && ( 
+      <input
+        type="text"
+        className="create-goal-input-unit"
+        placeholder="Unit"
+        value={unit}
+        onChange={(e) => setUnit(e.target.value)}
+        required
+      />)}
+
       <select
         className="create-goal-select"
         value={period}
