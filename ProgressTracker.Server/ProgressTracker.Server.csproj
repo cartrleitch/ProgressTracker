@@ -32,7 +32,8 @@
   <ItemGroup>
     <ProjectReference Include="..\progresstracker.client\progresstracker.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
+	  <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+	</ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

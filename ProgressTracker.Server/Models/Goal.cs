@@ -8,5 +8,7 @@
         public int TargetValue { get; set; }
         public int CurrentValue { get; set; } = 0;
         public string Period { get; set; } = "Daily";
+        public string Type { get; set; } = "Numeric";
+        public string Unit { get; set; } = "";
     }
 }

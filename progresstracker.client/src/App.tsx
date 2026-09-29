@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CreateGoalButton } from './Components';
+// import { GoalItem } from './Components';
 import { GoalList } from './Components';
 import './App.css';
 
@@ -17,6 +18,11 @@ function App() {
                 <h1 id="tableLabel">Progress Tracker</h1>
                 <CreateGoalButton onGoalCreated={handleGoalCreated} />
                 <GoalList refresh={refresh} />
+                {/* <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 10, currentValue: 5, period: 'Daily', type: 'Numeric', unit: 'Hrs' }} onEdit={() => { }} onDelete={() => { }} />
+                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 1, currentValue: 0, period: 'Daily', type: 'Checkbox', unit: '' }} onEdit={() => { }} onDelete={() => { }} />
+                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 5, currentValue: 0, period: 'Daily', type: 'Time', unit: 'Hrs' }} onEdit={() => { }} onDelete={() => { }} />
+                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 2000, currentValue: 0, period: 'Daily', type: 'Amount', unit: 'Calories' }} onEdit={() => { }} onDelete={() => { }} /> */}
+
             </div>
 
             <footer>
