@@ -19,7 +19,7 @@ export function GoalItem({
   onDelete: (id: number) => void;
   onEdit: (goal: Goal) => void;
 }) {
-// state variables
+  // state variables
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(goal.name);
   const [targetValue, setTargetValue] = useState(goal.targetValue);
@@ -345,6 +345,16 @@ export function GoalList({ refresh }: { refresh: number }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const goalOrder: Record<string, number> = {
+    Daily: 0,
+
+    Weekly: 1,
+
+    Monthly: 2,
+
+    Yearly: 3,
+  };
+
   useEffect(() => {
     const fetchGoals = async () => {
       try {
@@ -388,9 +398,13 @@ export function GoalList({ refresh }: { refresh: number }) {
     );
   };
 
+  const sortedGoals = [...goals].sort(
+    (a, b) => (goalOrder[a.period] ?? 99) - (goalOrder[b.period] ?? 99),
+  );
+
   return (
     <div className="goal-list">
-      {goals.map((goal) => (
+      {sortedGoals.map((goal) => (
         <GoalItem
           key={goal.id}
           goal={goal}
