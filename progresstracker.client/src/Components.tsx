@@ -19,6 +19,7 @@ export function GoalItem({
   onDelete: (id: number) => void;
   onEdit: (goal: Goal) => void;
 }) {
+// state variables
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(goal.name);
   const [targetValue, setTargetValue] = useState(goal.targetValue);
@@ -27,6 +28,8 @@ export function GoalItem({
   const [type] = useState(goal.type);
   const [unit, setUnit] = useState(goal.unit);
   const [isSaved, setIsSaved] = useState(true);
+  const [valueToAdd, setValueToAdd] = useState(0);
+  const [savedCurrentValue, setSavedCurrentValue] = useState(goal.currentValue);
 
   const percent =
     goal.targetValue > 0
@@ -99,7 +102,7 @@ export function GoalItem({
     const newCurrentValue = Math.max(0, currentValue - 1);
     setCurrentValue(newCurrentValue);
 
-    if (newCurrentValue !== goal.currentValue) {
+    if (newCurrentValue !== savedCurrentValue) {
       setIsSaved(false);
     } else {
       setIsSaved(true);
@@ -109,7 +112,8 @@ export function GoalItem({
   const handleIncrement = () => {
     const newCurrentValue = currentValue + 1;
     setCurrentValue(newCurrentValue);
-    if (newCurrentValue !== goal.currentValue) {
+    setIsSaved(false);
+    if (newCurrentValue !== savedCurrentValue) {
       setIsSaved(false);
     } else {
       setIsSaved(true);
@@ -121,29 +125,33 @@ export function GoalItem({
 
     setCurrentValue(newCurrentValue);
 
-    if (newCurrentValue !== goal.currentValue) {
+    if (newCurrentValue !== savedCurrentValue) {
       setIsSaved(false);
     } else {
       setIsSaved(true);
     }
   };
 
-  const handleSaveProgress = async () => {
+  const handleSaveProgress = async (value?: number) => {
     try {
       const response = await fetch(`/api/goals/${goal.id}`, {
         method: "PUT",
 
         headers: { "Content-Type": "application/json" },
 
-        body: JSON.stringify({ ...goal, currentValue }),
+        body: JSON.stringify({ ...goal, currentValue: value ?? currentValue }),
       });
 
       if (!response.ok) {
         throw new Error(`Failed to update goal progress: ${response.status}`);
       }
 
-      console.log("Updated goal progress:", { ...goal, currentValue });
+      console.log("Updated goal progress:", {
+        ...goal,
+        currentValue: value ?? currentValue,
+      });
       setIsSaved(true);
+      setSavedCurrentValue(value ?? currentValue);
     } catch (error) {
       console.error(error);
     }
@@ -157,19 +165,21 @@ export function GoalItem({
           className="create-goal-input"
           placeholder="Goal name"
           value={name}
+          onFocus={(e) => e.target.select()}
           onChange={(e) => setName(e.target.value)}
           required
         />
         {type != "Checkbox" && (
-        <input
-          type="number"
-          className="create-goal-input"
-          placeholder="Target value"
-          value={targetValue}
-          onChange={(e) => setTargetValue(Number(e.target.value))}
-          required
-        />
-      )}
+          <input
+            type="number"
+            className="create-goal-input"
+            placeholder="Target value"
+            value={targetValue}
+            onFocus={(e) => e.target.select()}
+            onChange={(e) => setTargetValue(Number(e.target.value))}
+            required
+          />
+        )}
 
         {(type == "Amount" || type == "Time") && (
           <input
@@ -177,6 +187,7 @@ export function GoalItem({
             className="create-goal-input-unit"
             placeholder="Unit"
             value={unit}
+            onFocus={(e) => e.target.select()}
             onChange={(e) => setUnit(e.target.value)}
             required
           />
@@ -253,7 +264,7 @@ export function GoalItem({
             <button
               type="button"
               className="goal-progress-save-button"
-              onClick={handleSaveProgress}
+              onClick={() => handleSaveProgress(currentValue)}
             >
               Save Progress
             </button>
@@ -279,6 +290,39 @@ export function GoalItem({
             >
               +
             </button>
+          </div>
+        )}
+        {(type === "Time" || type === "Amount") && (
+          <div className="goal-progress-add-elements">
+            <input
+              type="number"
+              className="goal-item-input"
+              placeholder="Add value"
+              value={valueToAdd}
+              onChange={(e) => {
+                setValueToAdd(Number(e.target.value));
+              }}
+              onFocus={(e) => e.target.select()}
+              required
+            />
+
+            <button
+              type="button"
+              className="goal-progress-add-button"
+              onClick={() => {
+                const newValue = currentValue + valueToAdd;
+                setCurrentValue(newValue);
+                handleSaveProgress(newValue);
+              }}
+            >
+              Add
+            </button>
+          </div>
+        )}
+
+        {(type === "Time" || type === "Amount") && (
+          <div className="goal-progress-label-percentage">
+            {currentValue} / {goal.targetValue} {unit} ({percent}%)
           </div>
         )}
         {type == "Checkbox" && (
@@ -437,6 +481,7 @@ export function CreateGoalButton({
           className="create-goal-input"
           placeholder="Target value"
           value={targetValue}
+          onFocus={(e) => e.target.select()}
           onChange={(e) => setTargetValue(Number(e.target.value))}
           required
         />
@@ -448,6 +493,7 @@ export function CreateGoalButton({
           className="create-goal-input-unit"
           placeholder="Unit"
           value={unit}
+          onFocus={(e) => e.target.select()}
           onChange={(e) => setUnit(e.target.value)}
           required
         />
