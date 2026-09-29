@@ -116,6 +116,18 @@ export function GoalItem({
     }
   };
 
+  const handleCheckboxChange = () => {
+    const newCurrentValue = currentValue === 0 ? 1 : 0;
+
+    setCurrentValue(newCurrentValue);
+
+    if (newCurrentValue !== goal.currentValue) {
+      setIsSaved(false);
+    } else {
+      setIsSaved(true);
+    }
+  };
+
   const handleSaveProgress = async () => {
     try {
       const response = await fetch(`/api/goals/${goal.id}`, {
@@ -148,6 +160,7 @@ export function GoalItem({
           onChange={(e) => setName(e.target.value)}
           required
         />
+        {type != "Checkbox" && (
         <input
           type="number"
           className="create-goal-input"
@@ -156,14 +169,18 @@ export function GoalItem({
           onChange={(e) => setTargetValue(Number(e.target.value))}
           required
         />
-        <input
-          type="text"
-          className="create-goal-input"
-          placeholder="Unit"
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
-          required
-        />
+      )}
+
+        {(type == "Amount" || type == "Time") && (
+          <input
+            type="text"
+            className="create-goal-input-unit"
+            placeholder="Unit"
+            value={unit}
+            onChange={(e) => setUnit(e.target.value)}
+            required
+          />
+        )}
         <select
           className="create-goal-select"
           value={period}
@@ -243,25 +260,37 @@ export function GoalItem({
           )}
         </div>
 
-        <div className="goal-progress-elements">
-          <button
-            type="button"
-            className="goal-progress-decrement-button"
-            onClick={handleDecrement}
-          >
-            -
-          </button>
-          <div className="goal-progress-label-percentage">
-            {currentValue} / {goal.targetValue} {unit} ({percent}%)
+        {type === "Numeric" && (
+          <div className="goal-progress-elements">
+            <button
+              type="button"
+              className="goal-progress-decrement-button"
+              onClick={handleDecrement}
+            >
+              -
+            </button>
+            <div className="goal-progress-label-percentage">
+              {currentValue} / {goal.targetValue} {unit} ({percent}%)
+            </div>
+            <button
+              type="button"
+              className="goal-progress-increment-button"
+              onClick={handleIncrement}
+            >
+              +
+            </button>
           </div>
-          <button
-            type="button"
-            className="goal-progress-increment-button"
-            onClick={handleIncrement}
-          >
-            +
-          </button>
-        </div>
+        )}
+        {type == "Checkbox" && (
+          <div className="goal-progress-checkbox-container">
+            <input
+              type="checkbox"
+              className="goal-progress-checkbox"
+              checked={currentValue > 0}
+              onChange={handleCheckboxChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -336,7 +365,7 @@ export function CreateGoalButton({
 }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [name, setName] = useState("");
-  const [targetValue, setTargetValue] = useState("");
+  const [targetValue, setTargetValue] = useState(1);
   const [period, setPeriod] = useState("Daily");
   const [type, setType] = useState("Numeric");
   const [unit, setUnit] = useState("");
@@ -368,8 +397,12 @@ export function CreateGoalButton({
       console.log("Created goal:", created);
       setIsFormOpen(false);
       setName("");
-      setTargetValue("");
+      setTargetValue(1);
       setPeriod("Daily");
+
+      setType("Numeric");
+
+      setUnit("");
       onGoalCreated(created);
     } catch (error) {
       console.error(error);
@@ -398,14 +431,27 @@ export function CreateGoalButton({
         onChange={(e) => setName(e.target.value)}
         required
       />
-      <input
-        type="number"
-        className="create-goal-input"
-        placeholder="Target value"
-        value={targetValue}
-        onChange={(e) => setTargetValue(e.target.value)}
-        required
-      />
+      {type != "Checkbox" && (
+        <input
+          type="number"
+          className="create-goal-input"
+          placeholder="Target value"
+          value={targetValue}
+          onChange={(e) => setTargetValue(Number(e.target.value))}
+          required
+        />
+      )}
+
+      {(type == "Amount" || type == "Time") && (
+        <input
+          type="text"
+          className="create-goal-input-unit"
+          placeholder="Unit"
+          value={unit}
+          onChange={(e) => setUnit(e.target.value)}
+          required
+        />
+      )}
       <select
         className="create-goal-select"
         value={type}
@@ -416,15 +462,6 @@ export function CreateGoalButton({
         <option value="Time">Time</option>
         <option value="Amount">Amount</option>
       </select>
-        {(type === "Amount" || type === "Time") && ( 
-      <input
-        type="text"
-        className="create-goal-input-unit"
-        placeholder="Unit"
-        value={unit}
-        onChange={(e) => setUnit(e.target.value)}
-        required
-      />)}
 
       <select
         className="create-goal-select"

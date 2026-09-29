@@ -18,6 +18,8 @@ function App() {
                 <CreateGoalButton onGoalCreated={handleGoalCreated} />
                 <GoalList refresh={refresh} />
                 <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 10, currentValue: 5, period: 'Daily', type: 'Numeric', unit: 'Hrs' }} onEdit={() => { }} onDelete={() => { }} />
+                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 1, currentValue: 0, period: 'Daily', type: 'Checkbox', unit: '' }} onEdit={() => { }} onDelete={() => { }} />
+
             </div>
 
             <footer>
