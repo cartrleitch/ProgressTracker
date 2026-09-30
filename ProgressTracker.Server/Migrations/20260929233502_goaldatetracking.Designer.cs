@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProgressTracker.Server.Data;
@@ -11,9 +12,11 @@ using ProgressTracker.Server.Data;
 namespace ProgressTracker.Server.Migrations
 {
     [DbContext(typeof(ProgressTrackerContext))]
-    partial class ProgressTrackerContextModelSnapshot : ModelSnapshot
+    [Migration("20260929233502_goaldatetracking")]
+    partial class goaldatetracking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace ProgressTracker.Server.Migrations
 
                     b.Property<int>("CurrentValue")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("LastReset")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()

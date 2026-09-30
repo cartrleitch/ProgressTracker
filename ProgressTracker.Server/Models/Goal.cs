@@ -10,5 +10,8 @@
         public string Period { get; set; } = "Daily";
         public string Type { get; set; } = "Numeric";
         public string Unit { get; set; } = "";
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime LastReset { get; set; } = DateTime.UtcNow;
     }
 }

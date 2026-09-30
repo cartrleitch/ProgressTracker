@@ -8,6 +8,9 @@ export interface Goal {
   period: string;
   type: string;
   unit: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  lastReset?: Date;
 }
 
 export function GoalItem({
@@ -30,6 +33,15 @@ export function GoalItem({
   const [isSaved, setIsSaved] = useState(true);
   const [valueToAdd, setValueToAdd] = useState(0);
   const [savedCurrentValue, setSavedCurrentValue] = useState(goal.currentValue);
+  const [createdAt] = useState(
+    goal.createdAt ? new Date(goal.createdAt) : null,
+  );
+  const [updatedAt] = useState(
+    goal.updatedAt ? new Date(goal.updatedAt) : null,
+  );
+
+  console.log("GoalItem createdAt:", createdAt);
+  console.log("GoalItem updatedAt:", updatedAt);
 
   const percent =
     goal.targetValue > 0
@@ -157,6 +169,22 @@ export function GoalItem({
     }
   };
 
+  const getDateSuffix = (date: number) => {
+    if (date >= 11 && date <= 13) {
+      return "th";
+    }
+    switch (date % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
   if (isEditing) {
     return (
       <form className="create-goal-form" onSubmit={handleSubmit}>
@@ -199,7 +227,9 @@ export function GoalItem({
         >
           <option value="Daily">Daily</option>
           <option value="Weekly">Weekly</option>
+          <option value="WeeklyOnThisDay">Weekly On This Day</option>
           <option value="Monthly">Monthly</option>
+          <option value="MonthlyOnThisDay">Monthly On This Day</option>
           <option value="Yearly">Yearly</option>
         </select>
         <div className="create-goal-form-actions">
@@ -222,7 +252,25 @@ export function GoalItem({
     <div className="goal-item">
       <div className="goal-item-header">
         <span className="goal-name">{goal.name}</span>
-        <span className="goal-period">{goal.period}</span>
+        {goal.period == "WeeklyOnThisDay" ? (
+          <span className="goal-period">
+            Weekly on{" "}
+            {createdAt?.toLocaleDateString("en-US", { weekday: "long" })}
+          </span>
+        ) : goal.period == "MonthlyOnThisDay" ? (
+          <span className="goal-period">
+            Monthly on {createdAt?.getDate()}
+            {getDateSuffix(createdAt?.getDate() ?? 0)}
+          </span>
+        ) : goal.period == "YearlyOnThisDay" ? (
+          <span className="goal-period">
+            Yearly on {createdAt?.getDate()}
+            {getDateSuffix(createdAt?.getDate() ?? 0)} of{" "}
+            {createdAt?.toLocaleDateString("en-US", { month: "long" })}
+          </span>
+        ) : (
+          <span className="goal-period">{goal.period}</span>
+        )}
       </div>
 
       <div className="goal-progress-bar">
@@ -347,12 +395,12 @@ export function GoalList({ refresh }: { refresh: number }) {
 
   const goalOrder: Record<string, number> = {
     Daily: 0,
-
     Weekly: 1,
-
-    Monthly: 2,
-
-    Yearly: 3,
+    WeeklyOnThisDay: 2,
+    Monthly: 3,
+    MonthlyOnThisDay: 4,
+    Yearly: 5,
+    YearlyOnThisDay: 6,
   };
 
   useEffect(() => {
@@ -401,6 +449,7 @@ export function GoalList({ refresh }: { refresh: number }) {
   const sortedGoals = [...goals].sort(
     (a, b) => (goalOrder[a.period] ?? 99) - (goalOrder[b.period] ?? 99),
   );
+  console.log("Sorted goals:", sortedGoals);
 
   return (
     <div className="goal-list">
@@ -457,10 +506,9 @@ export function CreateGoalButton({
       setName("");
       setTargetValue(1);
       setPeriod("Daily");
-
       setType("Numeric");
-
       setUnit("");
+
       onGoalCreated(created);
     } catch (error) {
       console.error(error);
@@ -530,8 +578,11 @@ export function CreateGoalButton({
       >
         <option value="Daily">Daily</option>
         <option value="Weekly">Weekly</option>
+        <option value="WeeklyOnThisDay">Weekly On This Day</option>
         <option value="Monthly">Monthly</option>
+        <option value="MonthlyOnThisDay">Monthly On This Day</option>
         <option value="Yearly">Yearly</option>
+        <option value="YearlyOnThisDay">Yearly On This Day</option>
       </select>
       <div className="create-goal-form-actions">
         <button type="submit" className="create-goal-save-button">
