@@ -169,6 +169,22 @@ export function GoalItem({
     }
   };
 
+  const getDateSuffix = (date: number) => {
+    if (date >= 11 && date <= 13) {
+      return "th";
+    }
+    switch (date % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
   if (isEditing) {
     return (
       <form className="create-goal-form" onSubmit={handleSubmit}>
@@ -238,16 +254,19 @@ export function GoalItem({
         <span className="goal-name">{goal.name}</span>
         {goal.period == "WeeklyOnThisDay" ? (
           <span className="goal-period">
-            Weekly on {createdAt?.toLocaleDateString(undefined, { weekday: 'long' })}
+            Weekly on{" "}
+            {createdAt?.toLocaleDateString("en-US", { weekday: "long" })}
           </span>
         ) : goal.period == "MonthlyOnThisDay" ? (
           <span className="goal-period">
             Monthly on {createdAt?.getDate()}
+            {getDateSuffix(createdAt?.getDate() ?? 0)}
           </span>
         ) : goal.period == "YearlyOnThisDay" ? (
           <span className="goal-period">
-            Yearly on {createdAt?.getDate()} of {" "}
-            {createdAt?.toLocaleDateString(undefined, { month: 'long' })}
+            Yearly on {createdAt?.getDate()}
+            {getDateSuffix(createdAt?.getDate() ?? 0)} of{" "}
+            {createdAt?.toLocaleDateString("en-US", { month: "long" })}
           </span>
         ) : (
           <span className="goal-period">{goal.period}</span>
