@@ -8,6 +8,9 @@ export interface Goal {
   period: string;
   type: string;
   unit: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  lastReset?: Date;
 }
 
 export function GoalItem({
@@ -30,6 +33,15 @@ export function GoalItem({
   const [isSaved, setIsSaved] = useState(true);
   const [valueToAdd, setValueToAdd] = useState(0);
   const [savedCurrentValue, setSavedCurrentValue] = useState(goal.currentValue);
+  const [createdAt] = useState(
+    goal.createdAt ? new Date(goal.createdAt) : null,
+  );
+  const [updatedAt] = useState(
+    goal.updatedAt ? new Date(goal.updatedAt) : null,
+  );
+
+  console.log("GoalItem createdAt:", createdAt);
+  console.log("GoalItem updatedAt:", updatedAt);
 
   const percent =
     goal.targetValue > 0
@@ -401,6 +413,7 @@ export function GoalList({ refresh }: { refresh: number }) {
   const sortedGoals = [...goals].sort(
     (a, b) => (goalOrder[a.period] ?? 99) - (goalOrder[b.period] ?? 99),
   );
+  console.log("Sorted goals:", sortedGoals);
 
   return (
     <div className="goal-list">
@@ -427,6 +440,9 @@ export function CreateGoalButton({
   const [period, setPeriod] = useState("Daily");
   const [type, setType] = useState("Numeric");
   const [unit, setUnit] = useState("");
+  const [createdAt, setCreatedAt] = useState<Date | null>(new Date());
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(new Date());
+  const [lastReset, setLastReset] = useState<Date | null>(new Date());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -438,6 +454,9 @@ export function CreateGoalButton({
       period,
       type,
       unit,
+      createdAt,
+      updatedAt,
+      lastReset,
     };
 
     try {
@@ -457,10 +476,12 @@ export function CreateGoalButton({
       setName("");
       setTargetValue(1);
       setPeriod("Daily");
-
       setType("Numeric");
-
       setUnit("");
+      setCreatedAt(null);
+      setUpdatedAt(null);
+      setLastReset(null);
+
       onGoalCreated(created);
     } catch (error) {
       console.error(error);

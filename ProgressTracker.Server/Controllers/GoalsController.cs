@@ -44,7 +44,20 @@ public class GoalsController : ControllerBase
             return BadRequest();
         }
 
-        _context.Entry(goal).State = EntityState.Modified;
+        var existingGoal = await _context.Goals.FindAsync(id);
+        
+        if (existingGoal == null)
+        {
+            return NotFound();
+        }
+
+        existingGoal.Name = goal.Name;
+        existingGoal.TargetValue = goal.TargetValue;
+        existingGoal.CurrentValue = goal.CurrentValue;
+        existingGoal.Period = goal.Period;
+        existingGoal.Type = goal.Type;
+        existingGoal.Unit = goal.Unit;
+        existingGoal.UpdatedAt = DateTime.UtcNow;
 
         try
         {
@@ -70,6 +83,9 @@ public class GoalsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Goal>> PostGoal(Goal goal)
     {
+        goal.CreatedAt = DateTime.UtcNow;
+        goal.UpdatedAt = DateTime.UtcNow;
+
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();
 
