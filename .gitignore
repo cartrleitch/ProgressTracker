@@ -344,6 +344,9 @@ ASALocalRun/
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
 
+# Don't track Postgres database files
+postgres-data/
+
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
 
