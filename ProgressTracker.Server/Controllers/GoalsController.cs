@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProgressTracker.Server.Models;
 using ProgressTracker.Server.Data;
+using ProgressTracker.Server.Services;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -17,7 +18,14 @@ public class GoalsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Goal>>> GetGoal()
     {
-        return await _context.Goals.ToListAsync();
+        var goals = await _context.Goals.ToListAsync();
+        var nowUtc = DateTime.UtcNow;
+        foreach (var goal in goals)
+        {
+            GoalResetService.ResetIfPeriodElapsed(goal, nowUtc);
+        }
+        await _context.SaveChangesAsync();
+        return goals;
     }
 
     // GET: api/Goal/5
@@ -30,6 +38,10 @@ public class GoalsController : ControllerBase
         {
             return NotFound();
         }
+
+        var nowUtc = DateTime.UtcNow;
+        GoalResetService.ResetIfPeriodElapsed(goal, nowUtc);
+        await _context.SaveChangesAsync();
 
         return goal;
     }

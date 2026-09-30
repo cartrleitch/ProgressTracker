@@ -211,7 +211,9 @@ export function GoalItem({
         >
           <option value="Daily">Daily</option>
           <option value="Weekly">Weekly</option>
+          <option value="WeeklyOnThisDay">Weekly On This Day</option>
           <option value="Monthly">Monthly</option>
+          <option value="MonthlyOnThisDay">Monthly On This Day</option>
           <option value="Yearly">Yearly</option>
         </select>
         <div className="create-goal-form-actions">
@@ -234,7 +236,22 @@ export function GoalItem({
     <div className="goal-item">
       <div className="goal-item-header">
         <span className="goal-name">{goal.name}</span>
-        <span className="goal-period">{goal.period}</span>
+        {goal.period == "WeeklyOnThisDay" ? (
+          <span className="goal-period">
+            Weekly on {createdAt?.toLocaleDateString(undefined, { weekday: 'long' })}
+          </span>
+        ) : goal.period == "MonthlyOnThisDay" ? (
+          <span className="goal-period">
+            Monthly on {createdAt?.getDate()}
+          </span>
+        ) : goal.period == "YearlyOnThisDay" ? (
+          <span className="goal-period">
+            Yearly on {createdAt?.getDate()} of {" "}
+            {createdAt?.toLocaleDateString(undefined, { month: 'long' })}
+          </span>
+        ) : (
+          <span className="goal-period">{goal.period}</span>
+        )}
       </div>
 
       <div className="goal-progress-bar">
@@ -359,12 +376,12 @@ export function GoalList({ refresh }: { refresh: number }) {
 
   const goalOrder: Record<string, number> = {
     Daily: 0,
-
     Weekly: 1,
-
-    Monthly: 2,
-
-    Yearly: 3,
+    WeeklyOnThisDay: 2,
+    Monthly: 3,
+    MonthlyOnThisDay: 4,
+    Yearly: 5,
+    YearlyOnThisDay: 6,
   };
 
   useEffect(() => {
@@ -440,9 +457,6 @@ export function CreateGoalButton({
   const [period, setPeriod] = useState("Daily");
   const [type, setType] = useState("Numeric");
   const [unit, setUnit] = useState("");
-  const [createdAt, setCreatedAt] = useState<Date | null>(new Date());
-  const [updatedAt, setUpdatedAt] = useState<Date | null>(new Date());
-  const [lastReset, setLastReset] = useState<Date | null>(new Date());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -454,9 +468,6 @@ export function CreateGoalButton({
       period,
       type,
       unit,
-      createdAt,
-      updatedAt,
-      lastReset,
     };
 
     try {
@@ -478,9 +489,6 @@ export function CreateGoalButton({
       setPeriod("Daily");
       setType("Numeric");
       setUnit("");
-      setCreatedAt(null);
-      setUpdatedAt(null);
-      setLastReset(null);
 
       onGoalCreated(created);
     } catch (error) {
@@ -551,8 +559,11 @@ export function CreateGoalButton({
       >
         <option value="Daily">Daily</option>
         <option value="Weekly">Weekly</option>
+        <option value="WeeklyOnThisDay">Weekly On This Day</option>
         <option value="Monthly">Monthly</option>
+        <option value="MonthlyOnThisDay">Monthly On This Day</option>
         <option value="Yearly">Yearly</option>
+        <option value="YearlyOnThisDay">Yearly On This Day</option>
       </select>
       <div className="create-goal-form-actions">
         <button type="submit" className="create-goal-save-button">
