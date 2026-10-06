@@ -221,7 +221,7 @@ export function GoalItem({
           />
         )}
         <select
-          className="create-goal-select"
+          className="standard-select"
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
         >
@@ -388,7 +388,13 @@ export function GoalItem({
   );
 }
 
-export function GoalList({ refresh }: { refresh: number }) {
+export function GoalList({
+  refresh,
+  filter,
+}: {
+  refresh: number;
+  filter: string;
+}) {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -453,14 +459,16 @@ export function GoalList({ refresh }: { refresh: number }) {
 
   return (
     <div className="goal-list">
-      {sortedGoals.map((goal) => (
-        <GoalItem
-          key={goal.id}
-          goal={goal}
-          onDelete={handleGoalDeleted}
-          onEdit={handleEdit}
-        />
-      ))}
+      {sortedGoals
+        .filter((goal) => filter === "All" || goal.period === filter)
+        .map((goal) => (
+          <GoalItem
+            key={goal.id}
+            goal={goal}
+            onDelete={handleGoalDeleted}
+            onEdit={handleEdit}
+          />
+        ))}
     </div>
   );
 }
@@ -561,7 +569,7 @@ export function CreateGoalButton({
         />
       )}
       <select
-        className="create-goal-select"
+        className="standard-select"
         value={type}
         onChange={(e) => setType(e.target.value)}
       >
@@ -572,7 +580,7 @@ export function CreateGoalButton({
       </select>
 
       <select
-        className="create-goal-select"
+        className="standard-select"
         value={period}
         onChange={(e) => setPeriod(e.target.value)}
       >

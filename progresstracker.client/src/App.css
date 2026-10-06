@@ -1,8 +1,8 @@
 ﻿html,
 body {
-    height: 100%;
-    margin: 0;
-    color-scheme: light;
+  height: 100%;
+  margin: 0;
+  color-scheme: light;
 }
 
 #root {
@@ -41,6 +41,8 @@ td {
     background-color 0.2s ease,
     transform 0.1s ease;
   width: 35%;
+  justify-content: center;
+  display: flex;
 }
 
 .create-goal-button:hover {
@@ -272,29 +274,31 @@ td {
   transform: scale(0.95);
 }
 .goal-progress-add-elements {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    margin-top: 0rem;
-    position: absolute;
-    left: 60%;
-    transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0rem;
+  position: absolute;
+  left: 60%;
+  transform: translateX(-50%);
 }
 .goal-progress-add-button {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    background-color: #e2e8f0;
-    color: #1e293b;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+  background-color: #e2e8f0;
+  color: #1e293b;
 }
 
-    .goal-progress-add-button:hover {
-        background-color: #cbd5e1;
-    }
+.goal-progress-add-button:hover {
+  background-color: #cbd5e1;
+}
 .goal-action-icon {
   width: 24px;
   height: 24px;
@@ -316,7 +320,7 @@ td {
 }
 
 .create-goal-input,
-.create-goal-select {
+.standard-select {
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
   border: 1px solid #cbd5e1;
@@ -330,7 +334,7 @@ td {
 }
 
 .create-goal-input:focus,
-.create-goal-select:focus {
+.standard-select:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
@@ -340,7 +344,7 @@ td {
   min-width: 120px;
 }
 
-.create-goal-select {
+.standard-select {
   flex: 0 1 130px;
   cursor: pointer;
 }
@@ -411,25 +415,27 @@ td {
 }
 
 .goal-item-input {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.95rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: #1e293b;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    width: 15%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 15%;
 }
 
-    .goal-item-input:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-    }
+.goal-item-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
 
 .create-goal-input {
-    flex: 1 1 160px;
-    min-width: 120px;
+  flex: 1 1 160px;
+  min-width: 120px;
 }
 
 .goal-progress-checkbox-container {
@@ -476,4 +482,44 @@ td {
 
 .goal-list-error {
   color: #b91c1c;
+}
+
+.goal-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 3em;
+  row-gap: 0.5rem;
+}
+
+.filter-spacer,
+.filter-container {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filter-select {
+  flex: 0 0 auto;
+  width: 11rem;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.filter-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
