@@ -490,6 +490,11 @@ td {
   align-items: center;
   column-gap: 3em;
   row-gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.goal-controls > .create-goal-form {
+  flex: 1 1 100%;
+  order: 2;
 }
 
 .filter-spacer,
