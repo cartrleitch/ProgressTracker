@@ -231,10 +231,22 @@ td {
   text-align: right;
 }
 
+.goal-progress-label-fixed {
+    flex: 0 0 14rem;
+    width: 14rem;
+    font-size: 0.85rem;
+    color: #475569;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+}
+
 .goal-item-actions {
-  display: flex;
-  justify-content: flex-start;
-  gap: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
 }
 
 .goal-edit-button,

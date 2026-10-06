@@ -394,7 +394,7 @@ export function GoalItem({
         )}
 
         {(type === "Time" || type === "Amount") && (
-          <div className="goal-progress-label-percentage">
+          <div className="goal-progress-label-fixed">
             {parseFloat(currentValue.toFixed(2))} / {parseFloat(goal.targetValue.toFixed(2))} {unit} (
             {percent}%)
           </div>
