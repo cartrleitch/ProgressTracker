@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { CreateGoalButton } from "./Components";
 //import { GoalItem } from "./Components";
-import { GoalList } from "./Components";
+import { GoalList, CreateGoalButton, GoalFilter } from "./Components";
 import "./App.css";
 
 function App() {
   const [refresh, setRefresh] = useState(0);
   const [showAttribution, setShowAttribution] = useState(false);
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState<string[]>([]);
 
   const handleGoalCreated = () => {
     setRefresh((prev) => prev + 1);
@@ -22,24 +21,7 @@ function App() {
           {" "}
           <div className="filter-spacer" aria-hidden="true"></div>
           <CreateGoalButton onGoalCreated={handleGoalCreated} />
-          <div className="filter-container">
-            <select
-              id="filterSelect"
-              aria-label="Filter Goals"
-              className="filter-select"
-              onChange={(e) => setFilter(e.target.value)}
-              value={filter}
-            >
-              <option value="All">All</option>
-              <option value="Daily">Daily</option>
-              <option value="Weekly">Weekly</option>
-              <option value="WeeklyOnThisDay">Weekly On This Day</option>
-              <option value="Monthly">Monthly</option>
-              <option value="MonthlyOnThisDay">Monthly On This Day</option>
-              <option value="Yearly">Yearly</option>
-              <option value="YearlyOnThisDay">Yearly On This Day</option>
-            </select>
-          </div>
+          <GoalFilter filter={filter} setFilter={setFilter} />
         </div>
         <GoalList refresh={refresh} filter={filter} />
         {/*<GoalItem

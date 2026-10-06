@@ -1,5 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
+import Select from "react-select";
+
 export interface Goal {
   id: number;
   name: string;
@@ -393,7 +395,7 @@ export function GoalList({
   filter,
 }: {
   refresh: number;
-  filter: string;
+  filter: string[];
 }) {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -460,7 +462,9 @@ export function GoalList({
   return (
     <div className="goal-list">
       {sortedGoals
-        .filter((goal) => filter === "All" || goal.period === filter)
+        .filter(
+          (goal) => filter.includes("All") || filter.includes(goal.period),
+        )
         .map((goal) => (
           <GoalItem
             key={goal.id}
@@ -605,5 +609,42 @@ export function CreateGoalButton({
         </button>
       </div>
     </form>
+  );
+}
+
+export function GoalFilter({
+  filter,
+  setFilter,
+}: {
+  filter: string[];
+  setFilter: (filter: string[]) => void;
+}) {
+  const filterOptions = [
+    { value: "All", label: "All" },
+    { value: "Daily", label: "Daily" },
+    { value: "Weekly", label: "Weekly" },
+    { value: "WeeklyOnThisDay", label: "Weekly On This Day" },
+    { value: "Monthly", label: "Monthly" },
+    { value: "MonthlyOnThisDay", label: "Monthly On This Day" },
+    { value: "Yearly", label: "Yearly" },
+    { value: "YearlyOnThisDay", label: "Yearly On This Day" },
+  ];
+
+  console.log("Current filter:", filter);
+  return (
+    <div className="filter-container">
+      <Select
+        inputId="filterSelect"
+        aria-label="Filter Goals"
+        className="filter-select"
+        classNamePrefix="filter-select"
+        isMulti
+        closeMenuOnSelect={false}
+        placeholder="Filter Goals"
+        options={filterOptions}
+        value={filterOptions.filter((o) => filter.includes(o.value))}
+        onChange={(selected) => setFilter(selected.map((o) => o.value))}
+      />
+    </div>
   );
 }
