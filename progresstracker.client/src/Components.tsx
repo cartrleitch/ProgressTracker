@@ -166,6 +166,7 @@ export function GoalItem({
       });
       setIsSaved(true);
       setSavedCurrentValue(value ?? currentValue);
+      onEdit({ ...goal, currentValue: value ?? currentValue });
     } catch (error) {
       console.error(error);
     }
@@ -393,9 +394,12 @@ export function GoalItem({
 export function GoalList({
   refresh,
   filter,
+  showCompleted,
 }: {
   refresh: number;
   filter: string[];
+
+  showCompleted: boolean;
 }) {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -462,9 +466,14 @@ export function GoalList({
   return (
     <div className="goal-list">
       {sortedGoals
-        .filter(
-          (goal) => filter.includes("All") || filter.includes(goal.period),
-        )
+        .filter((goal) => {
+          const periodMatchFilter =
+            filter.includes("All") || filter.includes(goal.period);
+          const completedMatchFilter =
+            showCompleted || goal.currentValue < goal.targetValue;
+
+          return periodMatchFilter && completedMatchFilter;
+        })
         .map((goal) => (
           <GoalItem
             key={goal.id}
@@ -645,6 +654,30 @@ export function GoalFilter({
         value={filterOptions.filter((o) => filter.includes(o.value))}
         onChange={(selected) => setFilter(selected.map((o) => o.value))}
       />
+    </div>
+  );
+}
+
+export function ShowCompletedToggle({
+  showCompleted,
+  setShowCompleted,
+}: {
+  showCompleted: boolean;
+  setShowCompleted: (value: boolean) => void;
+}) {
+  return (
+    <div className="show-completed-checkbox-container">
+      <input
+        id="showCompletedCheckbox"
+        type="checkbox"
+        className="show-completed-checkbox"
+        checked={showCompleted}
+        onChange={() => setShowCompleted(!showCompleted)}
+      />
+
+      <label htmlFor="showCompletedCheckbox" className="show-completed-label">
+        Show Completed
+      </label>
     </div>
   );
 }

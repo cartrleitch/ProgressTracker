@@ -1,12 +1,18 @@
 import { useState } from "react";
 //import { GoalItem } from "./Components";
-import { GoalList, CreateGoalButton, GoalFilter } from "./Components";
+import {
+  GoalList,
+  CreateGoalButton,
+  GoalFilter,
+  ShowCompletedToggle,
+} from "./Components";
 import "./App.css";
 
 function App() {
   const [refresh, setRefresh] = useState(0);
   const [showAttribution, setShowAttribution] = useState(false);
   const [filter, setFilter] = useState<string[]>(["All"]);
+  const [showCompleted, setShowCompleted] = useState(true);
 
   const handleGoalCreated = () => {
     setRefresh((prev) => prev + 1);
@@ -19,27 +25,21 @@ function App() {
 
         <div className="goal-controls">
           {" "}
-          <div className="filter-spacer" aria-hidden="true"></div>
+          <ShowCompletedToggle
+            showCompleted={showCompleted}
+            setShowCompleted={setShowCompleted}
+          />
           <CreateGoalButton onGoalCreated={handleGoalCreated} />
           <GoalFilter filter={filter} setFilter={setFilter} />
         </div>
-        <GoalList refresh={refresh} filter={filter} />
-        {/*<GoalItem
-          goal={{
-            id: 1,
-            name: "Sample Goal (Frontend Only)",
-            targetValue: 10,
-            currentValue: 5,
-            period: "Daily",
-            type: "Numeric",
-            unit: "Hrs",
-          }}
-          onEdit={() => {}}
-          onDelete={() => {}}
+        <GoalList
+          refresh={refresh}
+          filter={filter}
+          showCompleted={showCompleted}
         />
-         <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 1, currentValue: 0, period: 'Daily', type: 'Checkbox', unit: '' }} onEdit={() => { }} onDelete={() => { }} />
-                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 5, currentValue: 0, period: 'Daily', type: 'Time', unit: 'Hrs' }} onEdit={() => { }} onDelete={() => { }} />
-                <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 2000, currentValue: 0, period: 'Daily', type: 'Amount', unit: 'Calories' }} onEdit={() => { }} onDelete={() => { }} /> */}
+        {/* <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 1, currentValue: 0, period: 'Daily', type: 'Checkbox', unit: '' }} onEdit={() => { }} onDelete={() => { }} />
+        <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 5, currentValue: 0, period: 'Daily', type: 'Time', unit: 'Hrs' }} onEdit={() => { }} onDelete={() => { }} />
+        <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 2000, currentValue: 0, period: 'Daily', type: 'Amount', unit: 'Calories' }} onEdit={() => { }} onDelete={() => { }} /> */}
       </div>
 
       <footer>
