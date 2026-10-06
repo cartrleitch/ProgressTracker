@@ -200,14 +200,36 @@ export function GoalItem({
           onChange={(e) => setName(e.target.value)}
           required
         />
-        {type != "Checkbox" && (
+        {(type == "Amount" || type == "Time") && (
           <input
             type="number"
-            className="create-goal-input"
+            className="create-goal-input-target"
             placeholder="Target value"
             value={targetValue}
             onFocus={(e) => e.target.select()}
-            onChange={(e) => setTargetValue(Number(e.target.value))}
+            onChange={(e) => setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))}
+            required
+          />
+        )}
+
+        {type == "Numeric" && (
+          <input
+            type="number"
+            className="create-goal-input-target"
+            placeholder="Target value"
+            value={targetValue}
+            onFocus={(e) => e.target.select()}
+            onChange={(e) => setTargetValue(Math.floor(Number(e.target.value)))}
+            onKeyDown={(e) => {
+              if (
+                e.key === "e" ||
+                e.key === "E" ||
+                e.key === "." ||
+                e.key === "-"
+              ) {
+                e.preventDefault();
+              }
+            }}
             required
           />
         )}
@@ -351,7 +373,7 @@ export function GoalItem({
               placeholder="Add value"
               value={valueToAdd}
               onChange={(e) => {
-                setValueToAdd(Number(e.target.value));
+                setValueToAdd(parseFloat(Number(e.target.value).toFixed(2)));
               }}
               onFocus={(e) => e.target.select()}
               required
@@ -373,7 +395,8 @@ export function GoalItem({
 
         {(type === "Time" || type === "Amount") && (
           <div className="goal-progress-label-percentage">
-            {currentValue} / {goal.targetValue} {unit} ({percent}%)
+            {parseFloat(currentValue.toFixed(2))} / {parseFloat(goal.targetValue.toFixed(2))} {unit} (
+            {percent}%)
           </div>
         )}
         {type == "Checkbox" && (
@@ -558,14 +581,36 @@ export function CreateGoalButton({
         onChange={(e) => setName(e.target.value)}
         required
       />
-      {type != "Checkbox" && (
+      {(type == "Amount" || type == "Time") && (
         <input
           type="number"
-          className="create-goal-input"
+          className="create-goal-input-target"
           placeholder="Target value"
           value={targetValue}
           onFocus={(e) => e.target.select()}
-          onChange={(e) => setTargetValue(Number(e.target.value))}
+          onChange={(e) => setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))}
+          required
+        />
+      )}
+
+      {type == "Numeric" && (
+        <input
+          type="number"
+          className="create-goal-input-target"
+          placeholder="Target value"
+          value={targetValue}
+          onFocus={(e) => e.target.select()}
+          onChange={(e) => setTargetValue(Math.floor(Number(e.target.value)))}
+          onKeyDown={(e) => {
+            if (
+              e.key === "e" ||
+              e.key === "E" ||
+              e.key === "." ||
+              e.key === "-"
+            ) {
+              e.preventDefault();
+            }
+          }}
           required
         />
       )}

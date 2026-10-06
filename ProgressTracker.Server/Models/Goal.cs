@@ -5,8 +5,8 @@
     {
         public int Id { get; set; }
         public required string Name { get; set; }
-        public int TargetValue { get; set; }
-        public int CurrentValue { get; set; } = 0;
+        public float TargetValue { get; set; }
+        public float CurrentValue { get; set; } = 0;
         public string Period { get; set; } = "Daily";
         public string Type { get; set; } = "Numeric";
         public string Unit { get; set; } = "";

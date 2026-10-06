@@ -274,13 +274,13 @@ td {
   transform: scale(0.95);
 }
 .goal-progress-add-elements {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: 0rem;
-  position: absolute;
-  left: 60%;
-  transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: 0rem;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 .goal-progress-add-button {
   padding: 0.5rem 0.75rem;
@@ -425,7 +425,7 @@ td {
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
-  width: 15%;
+  width: 6rem;
 }
 
 .goal-item-input:focus {
@@ -436,6 +436,23 @@ td {
 .create-goal-input {
   flex: 1 1 160px;
   min-width: 120px;
+}
+
+.create-goal-input-target {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 20%;
+  flex: 1 1 120px;
+  min-width: 120px;
+  max-width: 200px;
 }
 
 .goal-progress-checkbox-container {
