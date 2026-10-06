@@ -6,7 +6,7 @@ import "./App.css";
 function App() {
   const [refresh, setRefresh] = useState(0);
   const [showAttribution, setShowAttribution] = useState(false);
-  const [filter, setFilter] = useState<string[]>([]);
+  const [filter, setFilter] = useState<string[]>(["All"]);
 
   const handleGoalCreated = () => {
     setRefresh((prev) => prev + 1);
