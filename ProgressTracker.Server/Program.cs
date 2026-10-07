@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using ProgressTracker.Server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,36 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProgressTrackerContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ProgressTrackerContext")));
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options => 
+{ 
+    options.Password.RequireNonAlphanumeric = true; 
+    options.Password.RequireUppercase = true; 
+    options.Password.RequireLowercase = true; 
+    options.Password.RequireDigit = true; 
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<ProgressTrackerContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.LoginPath = "/api/Identity/Account/Login";
+    options.LogoutPath = "/api/Identity/Account/Logout";
+    options.AccessDeniedPath = "/api/Identity/Account/AccessDenied";
+    options.SlidingExpiration = true;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = 403;
+        return Task.CompletedTask;
+    };
+});
 
 var app = builder.Build();
 
@@ -38,7 +69,16 @@ if (!app.Environment.IsDevelopment())
 
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGroup("/api/auth")
+    .MapIdentityApi<ApplicationUser>();
+app.MapPost("/api/auth/logout", async (SignInManager<ApplicationUser> signInManager) =>
+{
+   await signInManager.SignOutAsync();
+    return Results.Ok(new { message = "Logged out successfully" });
+}).RequireAuthorization();
 
 app.MapControllers();
 

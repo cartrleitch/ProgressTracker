@@ -1,4 +1,6 @@
-﻿namespace ProgressTracker.Server.Models
+﻿using ProgressTracker.Server.Data;
+
+namespace ProgressTracker.Server.Models
 {
     // This class represents a goal that a user wants to track progress towards. Fundamental object for this application.
     public class Goal
@@ -13,5 +15,7 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime LastReset { get; set; } = DateTime.UtcNow;
+        public string UserId { get; set; } = default!;
+        public ApplicationUser? User { get; set; }
     }
 }
