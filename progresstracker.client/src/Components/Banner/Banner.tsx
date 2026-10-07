@@ -1,4 +1,4 @@
-import { useAuth } from "./services/AuthContext";
+import { useAuth } from "../../services/AuthContext";
 import { useNavigate } from "react-router";
 export default function Banner() {
   // Renders two buttons, the one with a calendar image for for showing streaks and progress, and the one with a profile image for showing user profile and settings.

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Goal } from "./Types";
+import type { Goal } from "../../Types.ts";
 import { toast } from "react-toastify";
-import GoalItem from "./GoalItem.tsx";
-import { apiFetch } from "./services/Api";
+import GoalItem from "../../Components/GoalItem/GoalItem.tsx";
+import { apiFetch } from "../../services/Api.ts";
 
 export default function GoalList({
   refresh,

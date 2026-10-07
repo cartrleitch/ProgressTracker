@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import type { Goal } from "./Types.ts";
-import { apiFetch } from "./services/Api";
+import type { Goal } from "../../Types.ts";
+import { apiFetch } from "../../services/Api.ts";
 
 export default function GoalItem({
   goal,
@@ -325,7 +325,7 @@ export default function GoalItem({
             <img src="/delete.png" alt="Delete" className="goal-action-icon" />
           </button>
         </div>
-        <div>
+        <div className="goal-progress-save-container">
           {!isSaved && (
             <button
               type="button"

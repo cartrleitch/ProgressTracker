@@ -1,17 +1,25 @@
 import { useState } from "react";
-import ShowCompletedToggle from "./ShowCompletedToggle";
-import CreateGoalButton from "./CreateGoalButton";
-import GoalFilter from "./GoalFilter";
-import GoalList from "./GoalList";
-import Attributions from "./Attributions";
-import Banner from "./Banner";
+import ShowCompletedToggle from "./Components/ShowCompletedToggle/ShowCompletedToggle";
+import CreateGoalButton from "./Components/CreateGoalButton/CreateGoalButton";
+import GoalFilter from "./Components/GoalFilter/GoalFilter";
+import GoalList from "./Components/GoalList/GoalList";
+import Attributions from "./Components/Attributions/Attributions";
+import Banner from "./Components/Banner/Banner";
 import { Bounce, ToastContainer } from "react-toastify";
 import { useAuth } from "./services/AuthContext";
-import AuthForm from "./AuthForm";
+import AuthForm from "./Components/AuthForm/AuthForm";
 import { Navigate, Route, Routes } from "react-router";
-import Profile from "./Profile";
-import "./App.css";
-//import { GoalItem } from "./Components";
+import Profile from "./Components/Profile/Profile";
+import "./styles/App.css";
+import "./Components/Profile/Profile.css";
+import "./Components/GoalFilter/GoalFilter.css";
+import "./Components/CreateGoalButton/CreateGoalButton.css";
+import "./Components/ShowCompletedToggle/ShowCompletedToggle.css";
+import "./Components/Attributions/Attributions.css";
+import "./Components/Banner/Banner.css";
+import "./Components/AuthForm/AuthForm.css";
+import "./Components/GoalItem/GoalItem.css";
+import "./Components/GoalList/GoalList.css";
 function Goals() {
   const [refresh, setRefresh] = useState(0);
   const [filter, setFilter] = useState<string[]>(["All"]);
@@ -57,7 +65,7 @@ function Tracker() {
       <ToastContainer
         position="bottom-left"
         autoClose={3000}
-        limit={5}
+        limit={1}
         hideProgressBar={false}
         newestOnTop
         closeOnClick={false}

@@ -1,4 +1,4 @@
-import { useAuth } from "./services/AuthContext.tsx";
+import { useAuth } from "../../services/AuthContext.tsx";
 import { useNavigate } from "react-router";
 
 export default function Profile() {
