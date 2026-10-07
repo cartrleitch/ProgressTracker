@@ -51,6 +51,8 @@ export default defineConfig(({ command }) => {
             }
         },
         server: isServe ? {
+            host: '0.0.0.0',
+            strictPort: true,
             proxy: {
                 '^/api': {
                     target,

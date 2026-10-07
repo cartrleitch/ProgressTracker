@@ -367,4 +367,16 @@
   .goal-item-actions {
     gap: 0.75rem;
   }
+
+  .goal-progress-save-container {
+    order: 99;
+    flex: 1 1 100%;
+  }
+
+  .goal-progress-save-container:empty {
+    display: none;
+  }
+  .goal-progress-save-button {
+    width: 100%;
+  }
 }

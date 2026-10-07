@@ -325,7 +325,7 @@ export default function GoalItem({
             <img src="/delete.png" alt="Delete" className="goal-action-icon" />
           </button>
         </div>
-        <div>
+        <div className="goal-progress-save-container">
           {!isSaved && (
             <button
               type="button"

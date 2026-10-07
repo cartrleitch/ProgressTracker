@@ -65,7 +65,7 @@ function Tracker() {
       <ToastContainer
         position="bottom-left"
         autoClose={3000}
-        limit={5}
+        limit={1}
         hideProgressBar={false}
         newestOnTop
         closeOnClick={false}
