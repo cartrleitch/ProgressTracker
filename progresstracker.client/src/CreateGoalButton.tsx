@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { Goal } from "./Types";
 import { toast } from "react-toastify";
+import { apiFetch } from "./services/Api";
 
 export default function CreateGoalButton({
   onGoalCreated,
@@ -27,7 +28,7 @@ export default function CreateGoalButton({
     };
 
     try {
-      const response = await fetch("/api/goals", {
+      const response = await apiFetch("/api/goals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newGoal),

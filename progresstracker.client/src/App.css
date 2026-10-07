@@ -684,3 +684,146 @@ td {
   cursor: pointer;
   user-select: none;
 }
+
+.banner-button-container-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.banner-button-container-left {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ---------- Auth form ---------- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  width: 100%;
+  max-width: 380px;
+  margin: 4rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.auth-form h2 {
+  margin: 0 0 0.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #1e293b;
+}
+
+.auth-email-input,
+.auth-password-input {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  font-size: 16px;
+  color: #1e293b;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.auth-email-input::placeholder,
+.auth-password-input::placeholder {
+  color: #94a3b8;
+}
+
+.auth-email-input:focus,
+.auth-password-input:focus {
+  outline: none;
+  border-color: #162d7a;
+  box-shadow: 0 0 0 3px rgba(22, 45, 122, 0.2);
+}
+
+.auth-error {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  color: #991b1b;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+}
+
+.auth-submit-button {
+  padding: 0.65rem 1.4rem;
+  font-size: 16px;
+  font-weight: 600;
+  color: #e7e8f2;
+  background-color: #162d7a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.auth-submit-button:hover:not(:disabled) {
+  background-color: #1e3a97;
+}
+
+.auth-submit-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.auth-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-toggle-button {
+  padding: 0.25rem;
+  font-size: 0.9rem;
+  color: #162d7a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.auth-toggle-button:hover {
+  color: #1e3a97;
+}
+
+@media (max-width: 480px) {
+  .auth-form {
+    margin: 1.5rem auto;
+    padding: 1.25rem;
+  }
+}
+
+/* ---------- Profile page ---------- */
+
+.profile-page {
+  max-width: 480px;
+  margin: 2rem auto;
+}
+
+.profile-card {
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

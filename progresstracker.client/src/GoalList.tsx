@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Goal } from "./Types";
 import { toast } from "react-toastify";
 import GoalItem from "./GoalItem.tsx";
+import { apiFetch } from "./services/Api";
 
 export default function GoalList({
   refresh,
@@ -30,7 +31,7 @@ export default function GoalList({
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await fetch("/api/goals");
+        const response = await apiFetch("/api/goals");
         if (!response.ok) {
           throw new Error(`Failed to fetch goals: ${response.status}`);
         }

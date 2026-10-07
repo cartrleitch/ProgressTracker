@@ -3,7 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using ProgressTracker.Server.Models;
 using ProgressTracker.Server.Data;
 using ProgressTracker.Server.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class GoalsController : ControllerBase
@@ -14,11 +17,13 @@ public class GoalsController : ControllerBase
         _context = context;
     }
 
+    private string UserId => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
     // GET: api/Goal
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Goal>>> GetGoal()
     {
-        var goals = await _context.Goals.ToListAsync();
+        var goals = await _context.Goals.Where(g => g.UserId == UserId).ToListAsync();
         var nowUtc = DateTime.UtcNow;
         foreach (var goal in goals)
         {
@@ -32,7 +37,7 @@ public class GoalsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Goal>> GetGoal(int id)
     {
-        var goal = await _context.Goals.FindAsync(id);
+        var goal = await _context.Goals.Where(g => g.UserId == UserId && g.Id == id).FirstOrDefaultAsync();
 
         if (goal == null)
         {
@@ -56,7 +61,7 @@ public class GoalsController : ControllerBase
             return BadRequest();
         }
 
-        var existingGoal = await _context.Goals.FindAsync(id);
+        var existingGoal = await _context.Goals.Where(g => g.UserId == UserId && g.Id == id).FirstOrDefaultAsync();
         
         if (existingGoal == null)
         {
@@ -77,7 +82,7 @@ public class GoalsController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!GoalExists(id))
+            if (!await _context.Goals.AnyAsync(g => g.UserId == UserId && g.Id == id))
             {
                 return NotFound();
             }
@@ -94,7 +99,8 @@ public class GoalsController : ControllerBase
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<Goal>> PostGoal(Goal goal)
-    {
+    {   
+        goal.UserId = UserId;
         goal.CreatedAt = DateTime.UtcNow;
         goal.UpdatedAt = DateTime.UtcNow;
 
@@ -108,7 +114,7 @@ public class GoalsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteGoal(int? id)
     {
-        var goal = await _context.Goals.FindAsync(id);
+        var goal = await _context.Goals.Where(g => g.UserId == UserId && g.Id == id).FirstOrDefaultAsync();
         if (goal == null)
         {
             return NotFound();
@@ -118,10 +124,5 @@ public class GoalsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private bool GoalExists(int? id)
-    {
-        return _context.Goals.Any(e => e.Id == id);
     }
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import type { Goal } from "./Types.ts";
+import { apiFetch } from "./services/Api";
 
 export default function GoalItem({
   goal,
@@ -50,7 +51,7 @@ export default function GoalItem({
     };
 
     try {
-      const response = await fetch(`/api/goals/${goal.id}`, {
+      const response = await apiFetch(`/api/goals/${goal.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newGoal),
@@ -85,7 +86,7 @@ export default function GoalItem({
     }
 
     try {
-      const response = await fetch(`/api/goals/${goal.id}`, {
+      const response = await apiFetch(`/api/goals/${goal.id}`, {
         method: "DELETE",
       });
 
@@ -137,7 +138,7 @@ export default function GoalItem({
 
   const handleSaveProgress = async (value?: number) => {
     try {
-      const response = await fetch(`/api/goals/${goal.id}`, {
+      const response = await apiFetch(`/api/goals/${goal.id}`, {
         method: "PUT",
 
         headers: { "Content-Type": "application/json" },
