@@ -43,6 +43,7 @@ td {
   width: 35%;
   justify-content: center;
   display: flex;
+  user-select: none;
 }
 
 .create-goal-button:hover {
@@ -173,6 +174,7 @@ td {
     transform 0.1s ease;
   background-color: #e2e8f0;
   color: #1e293b;
+  user-select: none;
 }
 .goal-progress-decrement-button:hover {
   background-color: #cbd5e1;
@@ -193,6 +195,7 @@ td {
     transform 0.1s ease;
   background-color: #e2e8f0;
   color: #1e293b;
+  user-select: none;
 }
 
 .goal-progress-increment-button:hover {
@@ -266,6 +269,7 @@ td {
   background-color: #e2e8f0;
   color: #1e293b;
   margin-right: 0.5rem;
+  user-select: none;
 }
 
 .goal-edit-button:hover {
@@ -275,6 +279,7 @@ td {
 .goal-delete-button {
   background-color: #fee2e2;
   color: #b91c1c;
+  user-select: none;
 }
 
 .goal-delete-button:hover {
@@ -306,6 +311,7 @@ td {
     transform 0.1s ease;
   background-color: #e2e8f0;
   color: #1e293b;
+  user-select: none;
 }
 
 .goal-progress-add-button:hover {
@@ -316,6 +322,7 @@ td {
   height: 24px;
   object-fit: contain;
   pointer-events: none;
+  user-select: none;
 }
 
 .create-goal-form {
@@ -484,11 +491,13 @@ td {
   transition:
     background-color 0.2s ease,
     transform 0.1s ease;
+  user-select: none;
 }
 
 .create-goal-save-button {
   color: #e7e8f2;
   background-color: #162d7a;
+  user-select: none;
 }
 
 .create-goal-save-button:hover {
@@ -651,6 +660,7 @@ td {
   background-color: #162d7a;
   border: none;
   border-radius: 8px;
+  user-select: none;
 }
 
 .banner-button:hover {
@@ -667,6 +677,7 @@ td {
   object-fit: contain;
   pointer-events: none;
   filter: brightness(0) invert(1);
+  user-select: none;
 }
 
 .attribution-button {
