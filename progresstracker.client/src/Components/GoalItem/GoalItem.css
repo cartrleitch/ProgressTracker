@@ -315,3 +315,56 @@
   pointer-events: none;
   user-select: none;
 }
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .goal-item {
+    padding: 0.9rem;
+  }
+
+  .goal-item-header {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .goal-progress-bottom-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .goal-progress-elements {
+    width: auto;
+    gap: 0.5rem;
+  }
+
+  .goal-progress-label-fixed {
+    flex: 1 1 100%;
+    width: auto;
+    text-align: left;
+  }
+
+  .goal-progress-add-elements {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+  }
+
+  .goal-item-input,
+  .goal-progress-add-button,
+  .goal-progress-save-button,
+  .goal-edit-button,
+  .goal-delete-button {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .goal-progress-decrement-button,
+  .goal-progress-increment-button {
+    min-height: 44px;
+    font-size: 20px;
+  }
+
+  .goal-item-actions {
+    gap: 0.75rem;
+  }
+}

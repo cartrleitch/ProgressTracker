@@ -52,3 +52,17 @@
   user-select: none;
   cursor: pointer;
 }
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .show-completed-checkbox-container {
+    min-height: 44px;
+  }
+  .show-completed-label {
+    font-size: 0.9rem;
+    color: #475569;
+    user-select: none;
+    cursor: pointer;
+  }
+}

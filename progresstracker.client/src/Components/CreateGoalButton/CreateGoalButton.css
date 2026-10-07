@@ -192,3 +192,47 @@
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .goal-controls {
+    column-gap: 1rem;
+  }
+
+  .create-goal-button {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 0.5rem;
+  }
+
+  .create-goal-form {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem;
+  }
+
+  .create-goal-input,
+  .create-goal-input-target,
+  .create-goal-input-unit,
+  .standard-select,
+  .goal-item-input {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  .create-goal-form-actions,
+  .goal-progress-checkbox-container {
+    justify-content: stretch;
+  }
+
+  .create-goal-save-button,
+  .create-goal-cancel-button {
+    flex: 1;
+    min-height: 44px;
+  }
+}

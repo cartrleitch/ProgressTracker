@@ -35,6 +35,14 @@
   user-select: none;
 }
 
+/* Mobile */
+@media (max-width: 600px) {
+  .banner-button {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
 .banner-button-container-right {
   display: flex;
   gap: 0.5rem;
@@ -45,4 +53,12 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .banner-button {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
 }

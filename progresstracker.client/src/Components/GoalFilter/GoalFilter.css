@@ -50,3 +50,23 @@
 .filter-container .filter-select__option:active {
   background-color: #cbd5e1;
 }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .filter-spacer {
+    display: none;
+  }
+
+  .filter-container,
+  .show-completed-checkbox-container {
+    flex: 1 1 100%;
+  }
+
+  .filter-container {
+    justify-content: stretch;
+  }
+
+  .filter-container .filter-select {
+    width: 100%;
+  }
+}
