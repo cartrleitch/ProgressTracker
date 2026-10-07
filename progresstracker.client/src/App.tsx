@@ -1,11 +1,13 @@
 import { useState } from "react";
 //import { GoalItem } from "./Components";
-import {
-  GoalList,
-  CreateGoalButton,
-  GoalFilter,
-  ShowCompletedToggle,
-} from "./Components";
+import ShowCompletedToggle from "./ShowCompletedToggle";
+
+import CreateGoalButton from "./CreateGoalButton";
+
+import GoalFilter from "./GoalFilter";
+
+import GoalList from "./GoalList";
+import { Bounce, ToastContainer } from "react-toastify";
 import "./App.css";
 
 function App() {
@@ -41,7 +43,20 @@ function App() {
         <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 5, currentValue: 0, period: 'Daily', type: 'Time', unit: 'Hrs' }} onEdit={() => { }} onDelete={() => { }} />
         <GoalItem goal={{ id: 1, name: 'Sample Goal (Frontend Only)', targetValue: 2000, currentValue: 0, period: 'Daily', type: 'Amount', unit: 'Calories' }} onEdit={() => { }} onDelete={() => { }} /> */}
       </div>
-
+      <ToastContainer
+        position="bottom-left"
+        autoClose={3000}
+        limit={5}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <footer>
         <a
           className="attribution-button"

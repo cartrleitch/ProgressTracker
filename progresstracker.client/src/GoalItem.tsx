@@ -1,21 +1,8 @@
-import "./App.css";
-import { useState, useEffect } from "react";
-import Select from "react-select";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import type { Goal } from "./Types.ts";
 
-export interface Goal {
-  id: number;
-  name: string;
-  targetValue: number;
-  currentValue: number;
-  period: string;
-  type: string;
-  unit: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  lastReset?: Date;
-}
-
-export function GoalItem({
+export default function GoalItem({
   goal,
   onDelete,
   onEdit,
@@ -74,6 +61,7 @@ export function GoalItem({
       }
 
       console.log("Updated goal:", newGoal);
+      toast.success("Goal updated successfully!");
       setIsEditing(false);
       onEdit(newGoal);
     } catch (error) {
@@ -106,6 +94,7 @@ export function GoalItem({
       }
 
       onDelete(goal.id);
+      toast.success("Goal deleted successfully!");
       console.log("Deleted goal:", goal.id);
     } catch (error) {
       console.error(error);
@@ -167,6 +156,7 @@ export function GoalItem({
       setIsSaved(true);
       setSavedCurrentValue(value ?? currentValue);
       onEdit({ ...goal, currentValue: value ?? currentValue });
+      toast.success("Progress saved successfully!");
     } catch (error) {
       console.error(error);
     }
@@ -207,7 +197,9 @@ export function GoalItem({
             placeholder="Target value"
             value={targetValue}
             onFocus={(e) => e.target.select()}
-            onChange={(e) => setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))}
+            onChange={(e) =>
+              setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))
+            }
             required
           />
         )}
@@ -395,8 +387,8 @@ export function GoalItem({
 
         {(type === "Time" || type === "Amount") && (
           <div className="goal-progress-label-fixed">
-            {parseFloat(currentValue.toFixed(2))} / {parseFloat(goal.targetValue.toFixed(2))} {unit} (
-            {percent}%)
+            {parseFloat(currentValue.toFixed(2))} /{" "}
+            {parseFloat(goal.targetValue.toFixed(2))} {unit} ({percent}%)
           </div>
         )}
         {type == "Checkbox" && (
@@ -410,319 +402,6 @@ export function GoalItem({
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-export function GoalList({
-  refresh,
-  filter,
-  showCompleted,
-}: {
-  refresh: number;
-  filter: string[];
-
-  showCompleted: boolean;
-}) {
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const goalOrder: Record<string, number> = {
-    Daily: 0,
-    Weekly: 1,
-    WeeklyOnThisDay: 2,
-    Monthly: 3,
-    MonthlyOnThisDay: 4,
-    Yearly: 5,
-    YearlyOnThisDay: 6,
-  };
-
-  useEffect(() => {
-    const fetchGoals = async () => {
-      try {
-        const response = await fetch("/api/goals");
-        if (!response.ok) {
-          throw new Error(`Failed to fetch goals: ${response.status}`);
-        }
-        const data: Goal[] = await response.json();
-        setGoals(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load goals");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchGoals();
-  }, [refresh]);
-
-  if (isLoading) {
-    return <p>Loading goals...</p>;
-  }
-
-  if (error) {
-    return <p className="goal-list-error">{error}</p>;
-  }
-
-  if (goals.length === 0) {
-    return <p>No goals yet. Create one to get started!</p>;
-  }
-
-  const handleGoalDeleted = (id: number) => {
-    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
-  };
-
-  const handleEdit = (updatedGoal: Goal) => {
-    setGoals((prevGoals) =>
-      prevGoals.map((goal) =>
-        goal.id === updatedGoal.id ? updatedGoal : goal,
-      ),
-    );
-  };
-
-  const sortedGoals = [...goals].sort(
-    (a, b) => (goalOrder[a.period] ?? 99) - (goalOrder[b.period] ?? 99),
-  );
-  console.log("Sorted goals:", sortedGoals);
-
-  return (
-    <div className="goal-list">
-      {sortedGoals
-        .filter((goal) => {
-          const periodMatchFilter =
-            filter.includes("All") || filter.includes(goal.period);
-          const completedMatchFilter =
-            showCompleted || goal.currentValue < goal.targetValue;
-
-          return periodMatchFilter && completedMatchFilter;
-        })
-        .map((goal) => (
-          <GoalItem
-            key={goal.id}
-            goal={goal}
-            onDelete={handleGoalDeleted}
-            onEdit={handleEdit}
-          />
-        ))}
-    </div>
-  );
-}
-
-export function CreateGoalButton({
-  onGoalCreated,
-}: {
-  onGoalCreated: (goal: Goal) => void;
-}) {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [targetValue, setTargetValue] = useState(1);
-  const [period, setPeriod] = useState("Daily");
-  const [type, setType] = useState("Numeric");
-  const [unit, setUnit] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const newGoal = {
-      name,
-      targetValue: Number(targetValue),
-      currentValue: 0,
-      period,
-      type,
-      unit,
-    };
-
-    try {
-      const response = await fetch("/api/goals", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newGoal),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create goal: ${response.status}`);
-      }
-
-      const created = await response.json();
-      console.log("Created goal:", created);
-      setIsFormOpen(false);
-      setName("");
-      setTargetValue(1);
-      setPeriod("Daily");
-      setType("Numeric");
-      setUnit("");
-
-      onGoalCreated(created);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  if (!isFormOpen) {
-    return (
-      <button
-        type="button"
-        className="create-goal-button"
-        onClick={() => setIsFormOpen(true)}
-      >
-        Set Goal
-      </button>
-    );
-  }
-
-  return (
-    <form className="create-goal-form" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="create-goal-input"
-        placeholder="Goal name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      {(type == "Amount" || type == "Time") && (
-        <input
-          type="number"
-          className="create-goal-input-target"
-          placeholder="Target value"
-          value={targetValue}
-          onFocus={(e) => e.target.select()}
-          onChange={(e) => setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))}
-          required
-        />
-      )}
-
-      {type == "Numeric" && (
-        <input
-          type="number"
-          className="create-goal-input-target"
-          placeholder="Target value"
-          value={targetValue}
-          onFocus={(e) => e.target.select()}
-          onChange={(e) => setTargetValue(Math.floor(Number(e.target.value)))}
-          onKeyDown={(e) => {
-            if (
-              e.key === "e" ||
-              e.key === "E" ||
-              e.key === "." ||
-              e.key === "-"
-            ) {
-              e.preventDefault();
-            }
-          }}
-          required
-        />
-      )}
-
-      {(type == "Amount" || type == "Time") && (
-        <input
-          type="text"
-          className="create-goal-input-unit"
-          placeholder="Unit"
-          value={unit}
-          onFocus={(e) => e.target.select()}
-          onChange={(e) => setUnit(e.target.value)}
-          required
-        />
-      )}
-      <select
-        className="standard-select"
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-      >
-        <option value="Numeric">Numeric</option>
-        <option value="Checkbox">Checkbox</option>
-        <option value="Time">Time</option>
-        <option value="Amount">Amount</option>
-      </select>
-
-      <select
-        className="standard-select"
-        value={period}
-        onChange={(e) => setPeriod(e.target.value)}
-      >
-        <option value="Daily">Daily</option>
-        <option value="Weekly">Weekly</option>
-        <option value="WeeklyOnThisDay">Weekly On This Day</option>
-        <option value="Monthly">Monthly</option>
-        <option value="MonthlyOnThisDay">Monthly On This Day</option>
-        <option value="Yearly">Yearly</option>
-        <option value="YearlyOnThisDay">Yearly On This Day</option>
-      </select>
-      <div className="create-goal-form-actions">
-        <button type="submit" className="create-goal-save-button">
-          Save
-        </button>
-        <button
-          type="button"
-          className="create-goal-cancel-button"
-          onClick={() => setIsFormOpen(false)}
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
-  );
-}
-
-export function GoalFilter({
-  filter,
-  setFilter,
-}: {
-  filter: string[];
-  setFilter: (filter: string[]) => void;
-}) {
-  const filterOptions = [
-    { value: "All", label: "All" },
-    { value: "Daily", label: "Daily" },
-    { value: "Weekly", label: "Weekly" },
-    { value: "WeeklyOnThisDay", label: "Weekly On This Day" },
-    { value: "Monthly", label: "Monthly" },
-    { value: "MonthlyOnThisDay", label: "Monthly On This Day" },
-    { value: "Yearly", label: "Yearly" },
-    { value: "YearlyOnThisDay", label: "Yearly On This Day" },
-  ];
-
-  console.log("Current filter:", filter);
-  return (
-    <div className="filter-container">
-      <Select
-        inputId="filterSelect"
-        aria-label="Filter Goals"
-        className="filter-select"
-        classNamePrefix="filter-select"
-        isMulti
-        closeMenuOnSelect={false}
-        placeholder="Filter Goals"
-        options={filterOptions}
-        value={filterOptions.filter((o) => filter.includes(o.value))}
-        onChange={(selected) => setFilter(selected.map((o) => o.value))}
-      />
-    </div>
-  );
-}
-
-export function ShowCompletedToggle({
-  showCompleted,
-  setShowCompleted,
-}: {
-  showCompleted: boolean;
-  setShowCompleted: (value: boolean) => void;
-}) {
-  return (
-    <div className="show-completed-checkbox-container">
-      <input
-        id="showCompletedCheckbox"
-        type="checkbox"
-        className="show-completed-checkbox"
-        checked={showCompleted}
-        onChange={() => setShowCompleted(!showCompleted)}
-      />
-
-      <label htmlFor="showCompletedCheckbox" className="show-completed-label">
-        Show Completed
-      </label>
     </div>
   );
 }

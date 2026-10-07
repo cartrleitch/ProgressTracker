@@ -1,0 +1,1 @@
+cd progresstracker.client && npx prettier --write "src/**/*.{ts,tsx,css}"
