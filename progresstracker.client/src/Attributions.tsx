@@ -28,9 +28,18 @@ export default function Attributions() {
             title="write icons"
           >
             Write icons created by Tanah Basah - Flaticon
+          </a>{" "}
+          <br />
+          <a
+            href="https://www.flaticon.com/free-icons/calendar"
+            title="calendar icons"
+          >
+            Calendar icons created by Magnific - Flaticon
+          </a>{" "}
+          <br />
+          <a href="https://www.flaticon.com/free-icons/user" title="user icons">
+            User icons created by Magnific - Flaticon
           </a>
-          <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Magnific - Flaticon</a>
-          <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Magnific - Flaticon</a>
         </div>
       )}
     </footer>

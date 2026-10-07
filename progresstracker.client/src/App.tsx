@@ -21,7 +21,7 @@ function App() {
   return (
     <div>
       <div className="app-content">
-        <Banner /> 
+        <Banner />
         <h1 id="tableLabel">Progress Tracker</h1>
 
         <div className="goal-controls">

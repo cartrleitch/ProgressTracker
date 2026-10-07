@@ -635,36 +635,41 @@ td {
 }
 
 .banner-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .banner-button {
-    width: 2.5rem;
-    height: 2.5rem;
-    object-fit: contain;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #162d7a;
-    border: none;
-    border-radius: 8px;
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #162d7a;
+  border: none;
+  border-radius: 8px;
 }
 
 .banner-button:hover {
-    background-color: #1e40af;
+  background-color: #1e40af;
 }
 
 .banner-button:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 
 .banner-button-image {
-    width: 1.75rem;
-    height: 1.75rem;
-    object-fit: contain;
-    pointer-events: none;
-    filter: brightness(0) invert(1);
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+  pointer-events: none;
+  filter: brightness(0) invert(1);
+}
+
+.attribution-button {
+    cursor: pointer;
+    user-select: none;
 }
