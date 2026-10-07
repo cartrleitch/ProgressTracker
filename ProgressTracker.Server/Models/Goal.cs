@@ -1,4 +1,6 @@
-﻿using ProgressTracker.Server.Data;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using ProgressTracker.Server.Data;
+using System.Text.Json.Serialization;
 
 namespace ProgressTracker.Server.Models
 {
@@ -15,7 +17,11 @@ namespace ProgressTracker.Server.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime LastReset { get; set; } = DateTime.UtcNow;
+        [JsonIgnore]
+        [ValidateNever]
         public string UserId { get; set; } = default!;
+        [JsonIgnore]
+        [ValidateNever]
         public ApplicationUser? User { get; set; }
     }
 }

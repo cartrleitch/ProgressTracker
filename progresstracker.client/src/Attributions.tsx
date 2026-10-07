@@ -39,7 +39,9 @@ export default function Attributions() {
           <br />
           <a href="https://www.flaticon.com/free-icons/user" title="user icons">
             User icons created by Magnific - Flaticon
-          </a>
+          </a>{" "}
+          <br />
+          <a href="https://www.flaticon.com/free-icons/logout" title="logout icons">Logout icons created by Magnific - Flaticon</a>
         </div>
       )}
     </footer>

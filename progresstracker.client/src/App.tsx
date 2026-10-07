@@ -6,10 +6,12 @@ import GoalList from "./GoalList";
 import Attributions from "./Attributions";
 import Banner from "./Banner";
 import { Bounce, ToastContainer } from "react-toastify";
+import { useAuth } from "./services/AuthContext";
+import AuthForm from "./AuthForm";
 import "./App.css";
 //import { GoalItem } from "./Components";
 
-function App() {
+function Tracker() {
   const [refresh, setRefresh] = useState(0);
   const [filter, setFilter] = useState<string[]>(["All"]);
   const [showCompleted, setShowCompleted] = useState(true);
@@ -59,6 +61,20 @@ function App() {
       <Attributions />
     </div>
   );
+}
+
+function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!user) {
+    return <AuthForm />;
+  }
+
+  return <Tracker />;
 }
 
 export default App;
