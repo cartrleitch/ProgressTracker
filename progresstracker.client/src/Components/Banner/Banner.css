@@ -1,0 +1,48 @@
+.banner-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #162d7a;
+  border: none;
+  border-radius: 8px;
+  user-select: none;
+}
+
+.banner-button:hover {
+  background-color: #1e40af;
+}
+
+.banner-button:active {
+  transform: scale(0.95);
+}
+
+.banner-button-image {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+  pointer-events: none;
+  filter: brightness(0) invert(1);
+  user-select: none;
+}
+
+.banner-button-container-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.banner-button-container-left {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}

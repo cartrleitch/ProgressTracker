@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using ProgressTracker.Server.Data;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    options.Cookie.Name = "ProgressTracker.Auth";
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.LoginPath = "/api/Identity/Account/Login";
@@ -43,6 +45,10 @@ builder.Services.ConfigureApplicationCookie(options =>
         return Task.CompletedTask;
     };
 });
+
+builder.Services.AddDataProtection()
+    .SetApplicationName("ProgressTracker")
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, ".keys")));
 
 var app = builder.Build();
 

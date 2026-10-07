@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import type { Goal } from "./Types";
+import type { Goal } from "../../Types";
 import { toast } from "react-toastify";
-import { apiFetch } from "./services/Api";
+import { apiFetch } from "../../services/Api";
 
 export default function CreateGoalButton({
   onGoalCreated,

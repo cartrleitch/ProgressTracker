@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import type { Goal } from "./Types.ts";
-import { apiFetch } from "./services/Api";
+import type { Goal } from "../../Types.ts";
+import { apiFetch } from "../../services/Api.ts";
 
 export default function GoalItem({
   goal,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "./services/AuthContext.tsx";
+import { useAuth } from "../../services/AuthContext.tsx";
 
 export default function AuthForm() {
   const { signIn, signUp } = useAuth();
