@@ -4,6 +4,7 @@ import CreateGoalButton from "./CreateGoalButton";
 import GoalFilter from "./GoalFilter";
 import GoalList from "./GoalList";
 import Attributions from "./Attributions";
+import Banner from "./Banner";
 import { Bounce, ToastContainer } from "react-toastify";
 import "./App.css";
 //import { GoalItem } from "./Components";
@@ -20,6 +21,7 @@ function App() {
   return (
     <div>
       <div className="app-content">
+        <Banner /> 
         <h1 id="tableLabel">Progress Tracker</h1>
 
         <div className="goal-controls">
