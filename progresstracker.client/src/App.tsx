@@ -1,18 +1,15 @@
 import { useState } from "react";
-//import { GoalItem } from "./Components";
 import ShowCompletedToggle from "./ShowCompletedToggle";
-
 import CreateGoalButton from "./CreateGoalButton";
-
 import GoalFilter from "./GoalFilter";
-
 import GoalList from "./GoalList";
+import Attributions from "./Attributions";
 import { Bounce, ToastContainer } from "react-toastify";
 import "./App.css";
+//import { GoalItem } from "./Components";
 
 function App() {
   const [refresh, setRefresh] = useState(0);
-  const [showAttribution, setShowAttribution] = useState(false);
   const [filter, setFilter] = useState<string[]>(["All"]);
   const [showCompleted, setShowCompleted] = useState(true);
 
@@ -57,38 +54,7 @@ function App() {
         theme="light"
         transition={Bounce}
       />
-      <footer>
-        <a
-          className="attribution-button"
-          onClick={() => setShowAttribution(!showAttribution)}
-        >
-          {showAttribution ? "Hide Attribution" : "Show Attribution"}
-        </a>
-        {showAttribution && (
-          <div>
-            <a
-              href="https://www.flaticon.com/free-icons/plus"
-              title="plus icons"
-            >
-              Plus icons created by Fuzzee - Flaticon
-            </a>{" "}
-            <br />
-            <a
-              href="https://www.flaticon.com/free-icons/trash"
-              title="trash icons"
-            >
-              Trash icons created by Magnific - Flaticon
-            </a>{" "}
-            <br />
-            <a
-              href="https://www.flaticon.com/free-icons/write"
-              title="write icons"
-            >
-              Write icons created by Tanah Basah - Flaticon
-            </a>
-          </div>
-        )}
-      </footer>
+      <Attributions />
     </div>
   );
 }
