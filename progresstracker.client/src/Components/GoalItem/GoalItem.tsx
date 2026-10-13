@@ -187,13 +187,13 @@ export default function GoalItem({
     }
   };
 
-    const parseLocalDate = (dateString: string) => {
-        console.log("<---- Parsing date string:", dateString); 
-        const [y, m, d] = dateString.split("-").map(Number);
-        return new Date(y, m - 1, d);
-    };
+  const parseLocalDate = (dateString: string) => {
+    console.log("<---- Parsing date string:", dateString);
+    const [y, m, d] = dateString.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  };
 
-    const resetDateLocal = resetDate ? parseLocalDate(resetDate) : null;
+  const resetDateLocal = resetDate ? parseLocalDate(resetDate) : null;
 
   if (isEditing) {
     return (
