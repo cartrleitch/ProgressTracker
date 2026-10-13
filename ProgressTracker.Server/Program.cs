@@ -25,10 +25,18 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
 })
 .AddEntityFrameworkStores<ProgressTrackerContext>();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "ProgressTracker.Auth";
     options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.LoginPath = "/api/Identity/Account/Login";
     options.LogoutPath = "/api/Identity/Account/Logout";
@@ -46,11 +54,16 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
+var keyPath = builder.Configuration["DataProtection:KeysPath"] 
+    ?? Path.Combine(builder.Environment.ContentRootPath, ".keys");
+
 builder.Services.AddDataProtection()
     .SetApplicationName("ProgressTracker")
-    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, ".keys")));
+    .PersistKeysToFileSystem(new DirectoryInfo(keyPath));
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 using (var scope = app.Services.CreateScope())
 {
