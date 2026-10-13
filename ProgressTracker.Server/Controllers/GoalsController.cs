@@ -75,6 +75,8 @@ public class GoalsController : ControllerBase
         existingGoal.Type = goal.Type;
         existingGoal.Unit = goal.Unit;
         existingGoal.UpdatedAt = DateTime.UtcNow;
+        existingGoal.ResetDate = goal.ResetDate;
+        existingGoal.TimeZoneId = goal.TimeZoneId;
 
         try
         {
@@ -105,6 +107,7 @@ public class GoalsController : ControllerBase
         goal.UserId = UserId;
         goal.CreatedAt = DateTime.UtcNow;
         goal.UpdatedAt = DateTime.UtcNow;
+        goal.LastReset = DateTime.UtcNow;
 
         Console.WriteLine($"<----- Creating Goal - UserId: {goal.UserId}, Name: {goal.Name}, CreatedAt: {goal.CreatedAt}, UpdatedAt: {goal.UpdatedAt}, Period: {goal.Period}, Type: {goal.Type}, Unit: {goal.Unit}, ResetDate: {goal.ResetDate}");
 

@@ -9,5 +9,5 @@ export interface Goal {
   createdAt?: Date;
   updatedAt?: Date;
   lastReset?: Date;
-  resetDate?: Date;
+  resetDate?: string | null;
 }

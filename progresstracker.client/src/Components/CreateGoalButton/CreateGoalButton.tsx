@@ -15,7 +15,10 @@ export default function CreateGoalButton({
   const [type, setType] = useState("Numeric");
   const [unit, setUnit] = useState("");
   const [resetDate, setResetDate] = useState(
-    new Date().toISOString().split("T")[0],
+    new Date().toLocaleDateString("en-US"),
+  );
+  const [timeZoneId] = useState(
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,6 +32,7 @@ export default function CreateGoalButton({
       type,
       unit,
       resetDate,
+      timeZoneId,
     };
 
     try {

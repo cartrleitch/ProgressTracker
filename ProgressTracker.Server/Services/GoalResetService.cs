@@ -1,40 +1,92 @@
-﻿using ProgressTracker.Server.Models;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using ProgressTracker.Server.Models;
 
 namespace ProgressTracker.Server.Services
 {
     public static class GoalResetService
     {
         public static bool ResetIfPeriodElapsed (Goal goal, DateTime nowUtc) {
-            DateTime nextResetUtc = GetNextResetUtc(goal.LastReset, goal.Period, goal.ResetDate);
-            Console.WriteLine($"<--- Checking if goal '{goal.Name}' needs reset. Current time: {nowUtc} UTC, Last reset: {goal.LastReset} UTC, Next reset: {nextResetUtc} UTC.");
-            if (nowUtc >= nextResetUtc)
+
+            var timeZone = ResolveTimeZone(goal.TimeZoneId);
+            var lastResetUtc = DateTime.SpecifyKind(goal.LastReset, DateTimeKind.Utc);
+            var lastLocal = TimeZoneInfo.ConvertTimeFromUtc(lastResetUtc, timeZone);
+
+            var nextResetLocal = GetNextResetLocal(lastLocal, goal.Period, goal.ResetDate, DateOnly.FromDateTime(goal.CreatedAt));
+            Console.WriteLine($"<--- Checking if goal '{goal.Name}' needs reset. Current time: {nowUtc} UTC, Last reset: {goal.LastReset} UTC, Next reset: {nextResetLocal} {timeZone.Id}.");
+            if (nextResetLocal == null) return false; // No reset needed
+
+            var nextResetUtc = ConvertToUtc(nextResetLocal.Value, timeZone);
+            if (nowUtc < nextResetUtc) return false; // No reset needed
+
+            
+            goal.CurrentValue = 0;
+            goal.LastReset = nowUtc;
+            Console.WriteLine($"<----- Goal '{goal.Name}' reset at {nowUtc} UTC. Next reset scheduled for {GetNextResetLocal(goal.LastReset, goal.Period, goal.ResetDate, DateOnly.FromDateTime(goal.CreatedAt))} {timeZone.Id}.");
+            return true; // Reset occurred
+        }
+
+        private static DateTime? GetNextResetLocal (DateTime lastLocal, string period, DateOnly? resetDate, DateOnly createdAt)
+        {
+            var last = DateOnly.FromDateTime(lastLocal);
+            DateOnly? next = period switch
             {
-                goal.CurrentValue = 0;
-                goal.LastReset = nowUtc;
-                Console.WriteLine($"<----- Goal '{goal.Name}' reset at {nowUtc} UTC. Next reset scheduled for {GetNextResetUtc(goal.LastReset, goal.Period, goal.ResetDate)} UTC.");
-                return true; // Reset occurred
-            }
-            Console.WriteLine($"<----- Goal '{goal.Name}' does not need reset. Next reset scheduled for {nextResetUtc} UTC.");
-            return false; // No reset needed
+                "Daily" => last.AddDays(1),
+                "WeeklyOnThisDay" when createdAt is { } a => NextAfter(a, last, (d, k) => d.AddDays(7 * k)),
+                "Weekly" => last.AddDays(7 - (int)last.DayOfWeek),   // next Sunday
+                "MonthlyOnThisDay" when createdAt is { } a => NextAfter(a, last, (d, k) => d.AddMonths(k)),
+                "Monthly" => new DateOnly(last.Year, last.Month, 1).AddMonths(1),
+                "YearlyOnThisDay" when createdAt is { } a => NextAfter(a, last, (d, k) => d.AddYears(k)),
+                "Yearly" => new DateOnly(last.Year, 1, 1).AddYears(1),
+
+                "WeeklyOnSetDay" when resetDate is { } a => NextAfter(a, last, (d, k) => d.AddDays(7 * k)),
+                "MonthlyOnSetDay" when resetDate is { } a => NextAfter(a, last, (d, k) => d.AddMonths(k)),
+                "YearlyOnSetDay" when resetDate is { } a => NextAfter(a, last, (d, k) => d.AddYears(k)),
+                _ => null
+            };
+            return next?.ToDateTime(TimeOnly.MinValue);
 
         }
 
-        private static DateTime GetNextResetUtc (DateTime lastReset, string period, DateTime? resetDate)
+        private static DateOnly NextAfter (DateOnly anchor, DateOnly after, Func<DateOnly, int, DateOnly> step)
         {
-            return period switch
+            int k = 0;
+            DateOnly d;
+            do { d = step(anchor, k++); } while (d <= after);
+            return d;
+        }
+
+        private static DateTime ConvertToUtc(DateTime localTime, TimeZoneInfo timeZone)
+        {
+            localTime = DateTime.SpecifyKind(localTime, DateTimeKind.Unspecified);
+            if (timeZone.IsInvalidTime(localTime))
             {
-                "Daily" => new DateTime(lastReset.Year, lastReset.Month, lastReset.Day).AddDays(1),
-                "WeeklyOnThisDay" => new DateTime(lastReset.Year, lastReset.Month, lastReset.Day).AddDays(7),
-                "WeeklyOnSetDay" => new DateTime(resetDate.Value.Year, resetDate.Value.Month, resetDate.Value.Day).AddDays(7),
-                "Weekly" => new DateTime(lastReset.Year, lastReset.Month, lastReset.Day).AddDays((7 - (int)lastReset.DayOfWeek) == 0 ? 7 : 7 - (int)lastReset.DayOfWeek),
-                "MonthlyOnThisDay" => new DateTime(lastReset.Year, lastReset.Month, lastReset.Day).AddMonths(1),
-                "MonthlyOnSetDay" => new DateTime(resetDate.Value.Year, resetDate.Value.Month, resetDate.Value.Day).AddMonths(1),
-                "Monthly" => new DateTime(lastReset.Year, lastReset.Month, 1).AddMonths(1),
-                "YearlyOnThisDay" => new DateTime(lastReset.Year, lastReset.Month, lastReset.Day).AddYears(1),
-                "YearlyOnSetDay" => new DateTime(resetDate.Value.Year, resetDate.Value.Month, resetDate.Value.Day).AddYears(1),
-                "Yearly" => new DateTime(lastReset.Year, 1, 1).AddYears(1),
-                _ => DateTime.MaxValue, // If period is unrecognized, never reset
-            };
+                Console.WriteLine($"<----- The local time '{localTime}' is invalid in the time zone '{timeZone.Id}'. Adjusting to the next valid time.");
+                localTime = localTime.AddHours(1); // Adjust to the next hour
+            }
+            return TimeZoneInfo.ConvertTimeToUtc(localTime, timeZone);
+        }
+
+        private static TimeZoneInfo ResolveTimeZone(string timeZoneId)
+        {
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                Console.WriteLine($"<----- Time zone '{timeZoneId}' not found. Defaulting to UTC.");
+                return TimeZoneInfo.Utc;
+            }
+            catch (InvalidTimeZoneException)
+            {
+                Console.WriteLine($"<----- Time zone '{timeZoneId}' is invalid. Defaulting to UTC.");
+                return TimeZoneInfo.Utc;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"<----- An error occurred while resolving time zone '{timeZoneId}': {ex.Message}. Defaulting to UTC.");
+                return TimeZoneInfo.Utc;
+            }
         }
     }
 }
