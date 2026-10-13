@@ -17,6 +17,7 @@ namespace ProgressTracker.Server.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime LastReset { get; set; } = DateTime.UtcNow;
+        public DateTime? ResetDate { get; set; } = null;
         [JsonIgnore]
         [ValidateNever]
         public string UserId { get; set; } = default!;

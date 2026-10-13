@@ -78,6 +78,8 @@ public class GoalsController : ControllerBase
 
         try
         {
+            Console.WriteLine($"<----- Updating Goal - UserId: {existingGoal.UserId}, Name: {existingGoal.Name}, CreatedAt: {existingGoal.CreatedAt}, UpdatedAt: {existingGoal.UpdatedAt}, Period: {existingGoal.Period}, Type: {existingGoal.Type}, Unit: {existingGoal.Unit}, ResetDate: {existingGoal.ResetDate}");
+
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -103,6 +105,8 @@ public class GoalsController : ControllerBase
         goal.UserId = UserId;
         goal.CreatedAt = DateTime.UtcNow;
         goal.UpdatedAt = DateTime.UtcNow;
+
+        Console.WriteLine($"<----- Creating Goal - UserId: {goal.UserId}, Name: {goal.Name}, CreatedAt: {goal.CreatedAt}, UpdatedAt: {goal.UpdatedAt}, Period: {goal.Period}, Type: {goal.Type}, Unit: {goal.Unit}, ResetDate: {goal.ResetDate}");
 
         _context.Goals.Add(goal);
         await _context.SaveChangesAsync();

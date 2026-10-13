@@ -243,6 +243,9 @@ namespace ProgressTracker.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("ResetDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<float>("TargetValue")
                         .HasColumnType("real");
 

@@ -29,6 +29,9 @@ export default function GoalItem({
   const [updatedAt] = useState(
     goal.updatedAt ? new Date(goal.updatedAt) : null,
   );
+  const [resetDate, setResetDate] = useState(
+    goal.resetDate ? new Date(goal.resetDate) : null,
+  );
 
   console.log("GoalItem createdAt:", createdAt);
   console.log("GoalItem updatedAt:", updatedAt);
@@ -48,6 +51,7 @@ export default function GoalItem({
       period,
       type,
       unit,
+      resetDate: resetDate ?? undefined,
     };
 
     try {
@@ -238,6 +242,16 @@ export default function GoalItem({
             required
           />
         )}
+        {(period === "WeeklyOnSetDay" ||
+          period === "MonthlyOnSetDay" ||
+          period === "YearlyOnSetDay") && (
+          <input
+            type="date"
+            className="create-goal-input-date"
+            value={resetDate?.toISOString().split("T")[0]}
+            onChange={(e) => setResetDate(new Date(e.target.value))}
+          />
+        )}
         <select
           className="standard-select"
           value={period}
@@ -270,25 +284,57 @@ export default function GoalItem({
     <div className="goal-item">
       <div className="goal-item-header">
         <span className="goal-name">{goal.name}</span>
-        {goal.period == "WeeklyOnThisDay" ? (
-          <span className="goal-period">
-            Weekly on{" "}
-            {createdAt?.toLocaleDateString("en-US", { weekday: "long" })}
-          </span>
-        ) : goal.period == "MonthlyOnThisDay" ? (
-          <span className="goal-period">
-            Monthly on {createdAt?.getDate()}
-            {getDateSuffix(createdAt?.getDate() ?? 0)}
-          </span>
-        ) : goal.period == "YearlyOnThisDay" ? (
-          <span className="goal-period">
-            Yearly on {createdAt?.getDate()}
-            {getDateSuffix(createdAt?.getDate() ?? 0)} of{" "}
-            {createdAt?.toLocaleDateString("en-US", { month: "long" })}
-          </span>
-        ) : (
-          <span className="goal-period">{goal.period}</span>
-        )}
+
+        {(() => {
+          switch (goal.period) {
+            case "WeeklyOnThisDay":
+              return (
+                <span className="goal-period">
+                  Weekly on{" "}
+                  {createdAt?.toLocaleDateString("en-US", { weekday: "long" })}
+                </span>
+              );
+            case "MonthlyOnThisDay":
+              return (
+                <span className="goal-period">
+                  Monthly on {createdAt?.getDate()}
+                  {getDateSuffix(createdAt?.getDate() ?? 0)}
+                </span>
+              );
+            case "YearlyOnThisDay":
+              return (
+                <span className="goal-period">
+                  Yearly on {createdAt?.getDate()}
+                  {getDateSuffix(createdAt?.getDate() ?? 0)} of{" "}
+                  {createdAt?.toLocaleDateString("en-US", { month: "long" })}
+                </span>
+              );
+            case "WeeklyOnSetDay":
+              return (
+                <span className="goal-period">
+                  Weekly on{" "}
+                  {resetDate?.toLocaleDateString("en-US", { weekday: "long" })}
+                </span>
+              );
+            case "MonthlyOnSetDay":
+              return (
+                <span className="goal-period">
+                  Monthly on {resetDate?.getDate()}
+                  {getDateSuffix(resetDate?.getDate() ?? 0)}
+                </span>
+              );
+            case "YearlyOnSetDay":
+              return (
+                <span className="goal-period">
+                  Yearly on {resetDate?.getDate()}
+                  {getDateSuffix(resetDate?.getDate() ?? 0)} of{" "}
+                  {resetDate?.toLocaleDateString("en-US", { month: "long" })}
+                </span>
+              );
+            default:
+              return <span className="goal-period">{goal.period}</span>;
+          }
+        })()}
       </div>
 
       <div className="goal-progress-bar">
