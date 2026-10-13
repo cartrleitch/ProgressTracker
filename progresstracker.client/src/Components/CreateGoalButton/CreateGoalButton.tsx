@@ -13,7 +13,8 @@ export default function CreateGoalButton({
   const [targetValue, setTargetValue] = useState(1);
   const [period, setPeriod] = useState("Daily");
   const [type, setType] = useState("Numeric");
-  const [unit, setUnit] = useState("");
+    const [unit, setUnit] = useState("");
+    const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +136,9 @@ export default function CreateGoalButton({
         <option value="Time">Time</option>
         <option value="Amount">Amount</option>
       </select>
+        {(period === "WeeklyOnSetDay" || period === "MonthlyOnSetDay" || period === "YearlyOnSetDay") && (
+            <input type="date" className="create-goal-input-date" value={date} onChange={(e) => setDate(e.target.value)} />
+        )}
 
       <select
         className="standard-select"
@@ -144,10 +148,13 @@ export default function CreateGoalButton({
         <option value="Daily">Daily</option>
         <option value="Weekly">Weekly</option>
         <option value="WeeklyOnThisDay">Weekly On This Day</option>
+        <option value="WeeklyOnSetDay">Weekly On Set Day</option>
         <option value="Monthly">Monthly</option>
         <option value="MonthlyOnThisDay">Monthly On This Day</option>
+        <option value="MonthlyOnSetDay">Monthly On Set Day</option>
         <option value="Yearly">Yearly</option>
         <option value="YearlyOnThisDay">Yearly On This Day</option>
+        <option value="YearlyOnSetDay">Yearly On Set Day</option>
       </select>
       <div className="create-goal-form-actions">
         <button type="submit" className="create-goal-save-button">

@@ -1,8 +1,3 @@
-.create-goal-input {
-  flex: 1 1 160px;
-  min-width: 120px;
-}
-
 .create-goal-input-target {
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
@@ -11,13 +6,23 @@
   background-color: #ffffff;
   color: #1e293b;
   outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-  width: 20%;
-  flex: 1 1 120px;
-  min-width: 120px;
-  max-width: 200px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  flex: 1 1 100px;
+  min-width: 40px;
+  max-width: 100px;
+}
+
+.create-goal-input-date {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    flex: 0 0 170px;
+    min-width: 150px;
 }
 
 .goal-progress-checkbox-container {
@@ -128,9 +133,7 @@
   background-color: #ffffff;
   color: #1e293b;
   outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .create-goal-input:focus,
@@ -140,13 +143,14 @@
 }
 
 .create-goal-input {
-  flex: 1 1 160px;
-  min-width: 120px;
+  flex: 1 1 110px;
+  min-width: 60px;
 }
 
 .standard-select {
-  flex: 0 1 130px;
-  cursor: pointer;
+    flex: 0 1 110px;
+    min-width: 140px;
+    cursor: pointer;
 }
 
 .create-goal-form-actions {
