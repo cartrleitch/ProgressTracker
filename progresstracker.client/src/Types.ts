@@ -10,4 +10,5 @@ export interface Goal {
   updatedAt?: Date;
   lastReset?: Date;
   resetDate?: string | null;
+  streak?: number;
 }

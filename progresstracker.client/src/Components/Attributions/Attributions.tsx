@@ -46,6 +46,10 @@ export default function Attributions() {
             title="logout icons"
           >
             Logout icons created by Magnific - Flaticon
+          </a>{" "}
+          <br />
+          <a href="https://www.flaticon.com/free-icons/fire" title="fire icons">
+            Fire icons created by judanna - Flaticon
           </a>
         </div>
       )}

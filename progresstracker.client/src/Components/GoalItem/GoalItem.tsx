@@ -301,6 +301,11 @@ export default function GoalItem({
       <div className="goal-item-header">
         <span className="goal-name">{goal.name}</span>
 
+        <span className="goal-streak">
+          <img src="fire.png" alt="streak icon" className="goal-streak-icon" />{" "}
+          {goal.streak}
+        </span>
+
         {(() => {
           switch (goal.period) {
             case "WeeklyOnThisDay":

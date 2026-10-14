@@ -18,6 +18,7 @@ namespace ProgressTracker.Server.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public DateTime LastReset { get; set; } = DateTime.UtcNow;
         public DateOnly? ResetDate { get; set; }
+        public int Streak { get; set; } = 0;
         public string TimeZoneId { get; set; } = "UTC";
         [JsonIgnore]
         [ValidateNever]

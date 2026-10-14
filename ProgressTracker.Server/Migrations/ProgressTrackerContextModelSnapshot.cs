@@ -246,6 +246,9 @@ namespace ProgressTracker.Server.Migrations
                     b.Property<DateOnly?>("ResetDate")
                         .HasColumnType("date");
 
+                    b.Property<int>("Streak")
+                        .HasColumnType("integer");
+
                     b.Property<float>("TargetValue")
                         .HasColumnType("real");
 

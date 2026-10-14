@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProgressTracker.Server.Models;
+﻿using ProgressTracker.Server.Models;
 
 namespace ProgressTracker.Server.Services
 {
@@ -10,18 +9,32 @@ namespace ProgressTracker.Server.Services
             var timeZone = ResolveTimeZone(goal.TimeZoneId);
             var lastResetUtc = DateTime.SpecifyKind(goal.LastReset, DateTimeKind.Utc);
             var lastLocal = TimeZoneInfo.ConvertTimeFromUtc(lastResetUtc, timeZone);
+            var createdAtLocal = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(goal.CreatedAt, DateTimeKind.Utc), timeZone));
 
-            var nextResetLocal = GetNextResetLocal(lastLocal, goal.Period, goal.ResetDate, DateOnly.FromDateTime(goal.CreatedAt));
+            var nextResetLocal = GetNextResetLocal(lastLocal, goal.Period, goal.ResetDate, createdAtLocal);
             Console.WriteLine($"<--- Checking if goal '{goal.Name}' needs reset. Current time: {nowUtc} UTC, Last reset: {goal.LastReset} UTC, Next reset: {nextResetLocal} {timeZone.Id}.");
             if (nextResetLocal == null) return false; // No reset needed
 
             var nextResetUtc = ConvertToUtc(nextResetLocal.Value, timeZone);
             if (nowUtc < nextResetUtc) return false; // No reset needed
 
-            
+            // Check if the a period has passed since the next reset time, indicating a missed period for the streak
+            var secondResetBoundCheck = GetNextResetLocal(nextResetLocal.Value, goal.Period, goal.ResetDate, createdAtLocal);
+            bool missedPeriod = secondResetBoundCheck != null && nowUtc >= ConvertToUtc(secondResetBoundCheck.Value, timeZone);
+
+            if (!missedPeriod && goal.CurrentValue >= goal.TargetValue)
+            {
+                goal.Streak++;
+                Console.WriteLine($"<----- Goal '{goal.Name}' streak incremented to {goal.Streak}.");
+            }
+            else
+            {
+                goal.Streak = 0;
+                Console.WriteLine($"<----- Goal '{goal.Name}' streak reset to 0.");
+            }
             goal.CurrentValue = 0;
             goal.LastReset = nowUtc;
-            Console.WriteLine($"<----- Goal '{goal.Name}' reset at {nowUtc} UTC. Next reset scheduled for {GetNextResetLocal(goal.LastReset, goal.Period, goal.ResetDate, DateOnly.FromDateTime(goal.CreatedAt))} {timeZone.Id}.");
+            Console.WriteLine($"<----- Goal '{goal.Name}' reset at {nowUtc} UTC. Streak: {goal.Streak}. Next reset scheduled for {GetNextResetLocal(goal.LastReset, goal.Period, goal.ResetDate, createdAtLocal)} {timeZone.Id}.");
             return true; // Reset occurred
         }
 
@@ -31,11 +44,11 @@ namespace ProgressTracker.Server.Services
             DateOnly? next = period switch
             {
                 "Daily" => last.AddDays(1),
-                "WeeklyOnThisDay" when createdAt is { } a => NextAfter(a, last, (d, k) => d.AddDays(7 * k)),
+                "WeeklyOnThisDay" => NextAfter(createdAt, last, (d, k) => d.AddDays(7 * k)),
                 "Weekly" => last.AddDays(7 - (int)last.DayOfWeek),   // next Sunday
-                "MonthlyOnThisDay" when createdAt is { } a => NextAfter(a, last, (d, k) => d.AddMonths(k)),
+                "MonthlyOnThisDay" => NextAfter(createdAt, last, (d, k) => d.AddMonths(k)),
                 "Monthly" => new DateOnly(last.Year, last.Month, 1).AddMonths(1),
-                "YearlyOnThisDay" when createdAt is { } a => NextAfter(a, last, (d, k) => d.AddYears(k)),
+                "YearlyOnThisDay" => NextAfter(createdAt, last, (d, k) => d.AddYears(k)),
                 "Yearly" => new DateOnly(last.Year, 1, 1).AddYears(1),
 
                 "WeeklyOnSetDay" when resetDate is { } a => NextAfter(a, last, (d, k) => d.AddDays(7 * k)),
