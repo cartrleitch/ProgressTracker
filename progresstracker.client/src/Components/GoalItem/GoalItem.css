@@ -407,8 +407,22 @@
     position: static;
     transform: none;
     flex: 1 1 100%;
-    justify-content: center;
+    justify-content: right;
     order: -1;
     pointer-events: auto;
   }
+    .create-goal-input,
+    .create-goal-input-target,
+    .create-goal-input-unit,
+    .create-goal-input-date,
+    .standard-select,
+    .goal-item-input {
+        flex: 1 1 auto;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        min-height: 44px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
 }

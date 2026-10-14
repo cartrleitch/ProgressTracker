@@ -15,7 +15,7 @@ export default function CreateGoalButton({
   const [type, setType] = useState("Numeric");
   const [unit, setUnit] = useState("");
   const [resetDate, setResetDate] = useState(
-    new Date().toLocaleDateString("en-US"),
+    new Date().toLocaleDateString("en-CA"),
   );
   const [timeZoneId] = useState(
     Intl.DateTimeFormat().resolvedOptions().timeZone,
