@@ -55,7 +55,7 @@ export default function CreateGoalButton({
       setPeriod("Daily");
       setType("Numeric");
       setUnit("");
-      setResetDate(new Date().toISOString().split("T")[0]);
+      setResetDate(new Date().toLocaleDateString("en-CA"));
 
       toast.success("Goal created successfully!");
       onGoalCreated(created);
