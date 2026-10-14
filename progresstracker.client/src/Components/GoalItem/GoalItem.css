@@ -55,6 +55,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  position: relative;
 }
 
 .goal-name {
@@ -316,6 +317,29 @@
   user-select: none;
 }
 
+.goal-streak {
+  font-size: 0.85rem;
+  color: #475569;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.goal-streak-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.25rem;
+}
+
 /* Mobile */
 
 @media (max-width: 600px) {
@@ -378,5 +402,27 @@
   }
   .goal-progress-save-button {
     width: 100%;
+  }
+  .goal-streak {
+    position: static;
+    transform: none;
+    flex: 1 1 100%;
+    justify-content: right;
+    order: -1;
+    pointer-events: auto;
+  }
+  .create-goal-input,
+  .create-goal-input-target,
+  .create-goal-input-unit,
+  .create-goal-input-date,
+  .standard-select,
+  .goal-item-input {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+    box-sizing: border-box;
   }
 }

@@ -243,8 +243,18 @@ namespace ProgressTracker.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateOnly?>("ResetDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Streak")
+                        .HasColumnType("integer");
+
                     b.Property<float>("TargetValue")
                         .HasColumnType("real");
+
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Type")
                         .IsRequired()

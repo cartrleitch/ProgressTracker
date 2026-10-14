@@ -14,6 +14,12 @@ export default function CreateGoalButton({
   const [period, setPeriod] = useState("Daily");
   const [type, setType] = useState("Numeric");
   const [unit, setUnit] = useState("");
+  const [resetDate, setResetDate] = useState(
+    new Date().toLocaleDateString("en-CA"),
+  );
+  const [timeZoneId] = useState(
+    Intl.DateTimeFormat().resolvedOptions().timeZone,
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +31,8 @@ export default function CreateGoalButton({
       period,
       type,
       unit,
+      resetDate,
+      timeZoneId,
     };
 
     try {
@@ -47,6 +55,7 @@ export default function CreateGoalButton({
       setPeriod("Daily");
       setType("Numeric");
       setUnit("");
+      setResetDate(new Date().toLocaleDateString("en-CA"));
 
       toast.success("Goal created successfully!");
       onGoalCreated(created);
@@ -135,6 +144,16 @@ export default function CreateGoalButton({
         <option value="Time">Time</option>
         <option value="Amount">Amount</option>
       </select>
+      {(period === "WeeklyOnSetDay" ||
+        period === "MonthlyOnSetDay" ||
+        period === "YearlyOnSetDay") && (
+        <input
+          type="date"
+          className="create-goal-input-date"
+          value={resetDate}
+          onChange={(e) => setResetDate(e.target.value)}
+        />
+      )}
 
       <select
         className="standard-select"
@@ -143,11 +162,11 @@ export default function CreateGoalButton({
       >
         <option value="Daily">Daily</option>
         <option value="Weekly">Weekly</option>
-        <option value="WeeklyOnThisDay">Weekly On This Day</option>
+        <option value="WeeklyOnSetDay">Weekly On Set Day</option>
         <option value="Monthly">Monthly</option>
-        <option value="MonthlyOnThisDay">Monthly On This Day</option>
+        <option value="MonthlyOnSetDay">Monthly On Set Day</option>
         <option value="Yearly">Yearly</option>
-        <option value="YearlyOnThisDay">Yearly On This Day</option>
+        <option value="YearlyOnSetDay">Yearly On Set Day</option>
       </select>
       <div className="create-goal-form-actions">
         <button type="submit" className="create-goal-save-button">

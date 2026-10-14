@@ -9,4 +9,6 @@ export interface Goal {
   createdAt?: Date;
   updatedAt?: Date;
   lastReset?: Date;
+  resetDate?: string | null;
+  streak?: number;
 }
