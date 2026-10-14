@@ -162,13 +162,10 @@ export default function CreateGoalButton({
       >
         <option value="Daily">Daily</option>
         <option value="Weekly">Weekly</option>
-        <option value="WeeklyOnThisDay">Weekly On This Day</option>
         <option value="WeeklyOnSetDay">Weekly On Set Day</option>
         <option value="Monthly">Monthly</option>
-        <option value="MonthlyOnThisDay">Monthly On This Day</option>
         <option value="MonthlyOnSetDay">Monthly On Set Day</option>
         <option value="Yearly">Yearly</option>
-        <option value="YearlyOnThisDay">Yearly On This Day</option>
         <option value="YearlyOnSetDay">Yearly On Set Day</option>
       </select>
       <div className="create-goal-form-actions">

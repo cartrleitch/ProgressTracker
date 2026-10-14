@@ -271,13 +271,10 @@ export default function GoalItem({
         >
           <option value="Daily">Daily</option>
           <option value="Weekly">Weekly</option>
-          <option value="WeeklyOnThisDay">Weekly On This Day</option>
           <option value="WeeklyOnSetDay">Weekly On Set Day</option>
           <option value="Monthly">Monthly</option>
-          <option value="MonthlyOnThisDay">Monthly On This Day</option>
           <option value="MonthlyOnSetDay">Monthly On Set Day</option>
           <option value="Yearly">Yearly</option>
-          <option value="YearlyOnThisDay">Yearly On This Day</option>
           <option value="YearlyOnSetDay">Yearly On Set Day</option>
         </select>
         <div className="create-goal-form-actions">
@@ -308,28 +305,6 @@ export default function GoalItem({
 
         {(() => {
           switch (goal.period) {
-            case "WeeklyOnThisDay":
-              return (
-                <span className="goal-period">
-                  Weekly on{" "}
-                  {createdAt?.toLocaleDateString("en-US", { weekday: "long" })}
-                </span>
-              );
-            case "MonthlyOnThisDay":
-              return (
-                <span className="goal-period">
-                  Monthly on {createdAt?.getDate()}
-                  {getDateSuffix(createdAt?.getDate() ?? 0)}
-                </span>
-              );
-            case "YearlyOnThisDay":
-              return (
-                <span className="goal-period">
-                  Yearly on {createdAt?.getDate()}
-                  {getDateSuffix(createdAt?.getDate() ?? 0)} of{" "}
-                  {createdAt?.toLocaleDateString("en-US", { month: "long" })}
-                </span>
-              );
             case "WeeklyOnSetDay":
               return (
                 <span className="goal-period">

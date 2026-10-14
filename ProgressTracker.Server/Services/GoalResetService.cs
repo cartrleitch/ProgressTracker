@@ -44,13 +44,9 @@ namespace ProgressTracker.Server.Services
             DateOnly? next = period switch
             {
                 "Daily" => last.AddDays(1),
-                "WeeklyOnThisDay" => NextAfter(createdAt, last, (d, k) => d.AddDays(7 * k)),
                 "Weekly" => last.AddDays(7 - (int)last.DayOfWeek),   // next Sunday
-                "MonthlyOnThisDay" => NextAfter(createdAt, last, (d, k) => d.AddMonths(k)),
                 "Monthly" => new DateOnly(last.Year, last.Month, 1).AddMonths(1),
-                "YearlyOnThisDay" => NextAfter(createdAt, last, (d, k) => d.AddYears(k)),
                 "Yearly" => new DateOnly(last.Year, 1, 1).AddYears(1),
-
                 "WeeklyOnSetDay" when resetDate is { } a => NextAfter(a, last, (d, k) => d.AddDays(7 * k)),
                 "MonthlyOnSetDay" when resetDate is { } a => NextAfter(a, last, (d, k) => d.AddMonths(k)),
                 "YearlyOnSetDay" when resetDate is { } a => NextAfter(a, last, (d, k) => d.AddYears(k)),

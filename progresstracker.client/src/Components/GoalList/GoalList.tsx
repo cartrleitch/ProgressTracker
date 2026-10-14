@@ -21,14 +21,11 @@ export default function GoalList({
   const goalOrder: Record<string, number> = {
     Daily: 0,
     Weekly: 1,
-    WeeklyOnThisDay: 2,
-    WeeklyOnSetDay: 3,
-    Monthly: 4,
-    MonthlyOnThisDay: 5,
-    MonthlyOnSetDay: 6,
-    Yearly: 7,
-    YearlyOnThisDay: 8,
-    YearlyOnSetDay: 9,
+    WeeklyOnSetDay: 2,
+    Monthly: 3,
+    MonthlyOnSetDay: 4,
+    Yearly: 5,
+    YearlyOnSetDay: 6,
   };
 
   useEffect(() => {
