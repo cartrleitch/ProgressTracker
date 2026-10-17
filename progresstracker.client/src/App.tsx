@@ -4,6 +4,7 @@ import CreateGoalButton from "./Components/CreateGoalButton/CreateGoalButton";
 import GoalFilter from "./Components/GoalFilter/GoalFilter";
 import GoalList from "./Components/GoalList/GoalList";
 import Attributions from "./Components/Attributions/Attributions";
+import Calendar from "./Components/Calendar/Calendar";
 import Banner from "./Components/Banner/Banner";
 import { Bounce, ToastContainer } from "react-toastify";
 import { useAuth } from "./services/AuthContext";
@@ -20,6 +21,7 @@ import "./Components/Banner/Banner.css";
 import "./Components/AuthForm/AuthForm.css";
 import "./Components/GoalItem/GoalItem.css";
 import "./Components/GoalList/GoalList.css";
+import "./Components/Calendar/Calendar.css";
 function Goals() {
   const [refresh, setRefresh] = useState(0);
   const [filter, setFilter] = useState<string[]>(["All"]);
@@ -57,6 +59,7 @@ function Tracker() {
       <Routes>
         <Route path="/" element={<Goals />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/calendar" element={<Calendar />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <ToastContainer

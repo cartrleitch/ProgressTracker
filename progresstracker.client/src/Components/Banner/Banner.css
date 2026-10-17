@@ -1,7 +1,8 @@
 .banner-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
 .banner-button {
@@ -33,6 +34,24 @@
   pointer-events: none;
   filter: brightness(0) invert(1);
   user-select: none;
+}
+
+.banner-logo {
+    width: 2.75rem;
+    height: 2.75rem;
+    object-fit: contain;
+    user-select: none;
+    cursor: pointer;
+}
+
+.banner-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Mobile */

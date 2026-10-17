@@ -8,7 +8,7 @@ export default function Banner() {
   return (
     <div className="banner-container">
       <div className="banner-button-container-left">
-        <button className="banner-button" onClick={() => navigate("/")}>
+        <button className="banner-button" onClick={() => navigate("/calendar")}>
           <img
             src="/calendar.png"
             alt="Calendar"
@@ -16,7 +16,9 @@ export default function Banner() {
           />
         </button>
       </div>
-
+          <div className="banner-title-container">
+              <img src="/favicon.svg" alt="Logo" className="banner-logo" onClick={() => navigate("/")} />
+          </div>
       <div className="banner-button-container-right">
         <button className="banner-button" onClick={() => navigate("/profile")}>
           <img
