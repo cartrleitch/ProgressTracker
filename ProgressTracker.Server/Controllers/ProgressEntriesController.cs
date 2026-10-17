@@ -19,7 +19,7 @@ public class ProgressEntriesController : ControllerBase
         _context = context;
     }
 
-    // GET: api/ProgressEntry
+    // GET: api/progressentries
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProgressEntry>>> GetProgressEntry()
     {
@@ -27,7 +27,22 @@ public class ProgressEntriesController : ControllerBase
         return await _context.ProgressEntries.Where(pe => pe.LinkedGoal.UserId == UserId).ToListAsync();
     }
 
-    // GET: api/ProgressEntry/5
+    // GET: api/progressentries/goal/5/calendar?from=2026-01-01&to=2026-12-31
+    [HttpGet("goal/{goalId}/calendar")]
+    public async Task<ActionResult<IEnumerable<CalendarPeriodResponse>>> GetCalendar(int goalId, DateOnly from, DateOnly to)
+    {
+        var goal = await _context.Goals.Where(g => g.UserId == UserId && g.Id == goalId).FirstOrDefaultAsync();
+        if (goal == null)
+        {
+            return NotFound();
+        }
+        var entries = await _context.ProgressEntries.Where(pe => pe.LinkedGoal.UserId == UserId && pe.LinkedGoal.Id == goalId && pe.LocalDate >= from && pe.LocalDate <= to).ToListAsync();
+
+        // Group entries by week (or any other period) and calculate progress
+        return Ok();
+    }
+
+    // GET: api/progressentries/5
     [HttpGet("{id}")]
     public async Task<ActionResult<ProgressEntry>> GetProgressEntry(int id)
     {
@@ -41,7 +56,7 @@ public class ProgressEntriesController : ControllerBase
         return progressentry;
     }
 
-    // GET: api/ProgressEntry/goal/5
+    // GET: api/progressentries/goal/5
     [HttpGet("goal/{goalId}")]
     public async Task<ActionResult<IEnumerable<ProgressEntry>>> GetProgressEntriesByGoal(int goalId)
     {
@@ -64,7 +79,7 @@ public class ProgressEntriesController : ControllerBase
         return progressEntries;
     }
 
-    // PUT: api/ProgressEntry/5
+    // PUT: api/progressentries/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     public async Task<IActionResult> PutProgressEntry(int? id, UpdateProgressEntryRequest progressentry)
@@ -97,7 +112,7 @@ public class ProgressEntriesController : ControllerBase
         return NoContent();
     }
 
-    // POST: api/ProgressEntry
+    // POST: api/progressentries
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<ProgressEntry>> PostProgressEntry(CreateProgressEntryRequest progressentry, int goalId)
@@ -122,7 +137,7 @@ public class ProgressEntriesController : ControllerBase
         return CreatedAtAction("GetProgressEntry", new { id = entry.Id }, response);
     }
 
-    // DELETE: api/ProgressEntry/5
+    // DELETE: api/progressentries/5
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProgressEntry(int? id)
     {
