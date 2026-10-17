@@ -144,14 +144,27 @@ export default function GoalItem({
     }
   };
 
+  function localDateString(timeZoneId: string, date = new Date()) {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: timeZoneId,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(date);
+  }
+
   const handleSaveProgress = async (value?: number) => {
+    const newValue = value ?? currentValue;
+    const delta = newValue - savedCurrentValue;
+
     try {
+      // Update the goal's current value
       const response = await apiFetch(`/api/goals/${goal.id}`, {
         method: "PUT",
 
         headers: { "Content-Type": "application/json" },
 
-        body: JSON.stringify({ ...goal, currentValue: value ?? currentValue }),
+        body: JSON.stringify({ ...goal, currentValue: newValue }),
       });
 
       if (!response.ok) {
@@ -160,11 +173,31 @@ export default function GoalItem({
 
       console.log("Updated goal progress:", {
         ...goal,
-        currentValue: value ?? currentValue,
+        currentValue: newValue,
       });
+
+      // Create a new progress entry if the value has changed
+      if (delta !== 0) {
+        const progressEntryResponse = await apiFetch(
+          `/api/progressentries?goalId=${goal.id}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              localDate: localDateString(timeZoneId),
+              valueChange: delta,
+            }),
+          },
+        );
+        if (!progressEntryResponse.ok) {
+          throw new Error(
+            `Failed to create progress entry: ${progressEntryResponse.status}`,
+          );
+        }
+      }
       setIsSaved(true);
-      setSavedCurrentValue(value ?? currentValue);
-      onEdit({ ...goal, currentValue: value ?? currentValue });
+      setSavedCurrentValue(newValue);
+      onEdit({ ...goal, currentValue: newValue });
       toast.success("Progress saved successfully!");
     } catch (error) {
       console.error(error);

@@ -286,14 +286,14 @@ namespace ProgressTracker.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("LinkedGoalId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ValueChange")
-                        .HasColumnType("integer");
+                    b.Property<DateOnly>("LocalDate")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("ValueChange")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
