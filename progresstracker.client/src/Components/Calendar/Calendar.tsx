@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { apiFetch } from "../../services/Api.ts";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
+import type { Goal } from "../../Types.ts";
 
 interface CalendarPeriod {
   start: string;
@@ -14,8 +17,9 @@ export default function Calendar() {
     null,
   );
   const [error, setError] = useState<string | null>(null);
+  const [goals, setGoals] = useState<Goal[]>([]);
 
-  const fetchCalendarInfo = async () => {
+  const fetchCalendarInfo = async (selectedGoalId: string) => {
     setError(null);
     const year = new Date().getFullYear();
     const from = `${year}-01-01`;
@@ -23,7 +27,7 @@ export default function Calendar() {
 
     try {
       const response = await apiFetch(
-        `/api/progressentries/${goalId}/calendar?from=${from}&to=${to}`,
+        `/api/progressentries/${selectedGoalId}/calendar?from=${from}&to=${to}`,
       );
 
       if (!response.ok) {
@@ -37,16 +41,47 @@ export default function Calendar() {
     }
   };
 
+  useEffect(() => {
+    const fetchGoals = async () => {
+      try {
+        const response = await apiFetch("/api/goals");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch goals: ${response.status}`);
+        }
+        const data: Goal[] = await response.json();
+        setGoals(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load goals");
+        toast.error("Failed to load goals");
+      }
+    };
+
+    fetchGoals();
+  });
+
   return (
-    <div>
-      <input
-        type="number"
-        value={goalId}
-        onChange={(e) => setGoalId(e.target.value)}
-      />
-      <button onClick={fetchCalendarInfo} disabled={!goalId}>
-        Load
-      </button>
+      <div className="calendar-container">
+          <h1>Progress Calendar</h1>
+      <div className="calendar-header">
+        <select
+          value={goalId}
+          onChange={(e) => {
+            setGoalId(e.target.value);
+            fetchCalendarInfo(e.target.value);
+          }}
+          className="calendar-select"
+        >
+          <option value="" disabled>
+            Select a goal
+          </option>
+          {goals.map((goal) => (
+            <option key={goal.id} value={goal.id}>
+              {goal.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {error && <p>{error}</p>}
       <pre>
         {calendarInfo
