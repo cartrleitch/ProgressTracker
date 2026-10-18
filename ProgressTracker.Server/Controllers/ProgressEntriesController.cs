@@ -10,6 +10,7 @@ using ProgressTracker.Server.Services;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class ProgressEntriesController : ControllerBase
 {
     private readonly ProgressTrackerContext _context;

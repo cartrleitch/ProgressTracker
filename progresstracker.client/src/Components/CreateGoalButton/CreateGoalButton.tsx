@@ -43,8 +43,8 @@ export default function CreateGoalButton({
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to create goal: ${response.status}`);
         toast.error("Failed to create goal");
+        throw new Error(`Failed to create goal: ${response.status}`);
       }
 
       const created = await response.json();
@@ -94,6 +94,7 @@ export default function CreateGoalButton({
           placeholder="Target value"
           value={targetValue}
           onFocus={(e) => e.target.select()}
+          onClick={(e) => e.currentTarget.select()}
           onChange={(e) =>
             setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))
           }
@@ -108,6 +109,7 @@ export default function CreateGoalButton({
           placeholder="Target value"
           value={targetValue}
           onFocus={(e) => e.target.select()}
+          onClick={(e) => e.currentTarget.select()}
           onChange={(e) => setTargetValue(Math.floor(Number(e.target.value)))}
           onKeyDown={(e) => {
             if (
@@ -130,6 +132,7 @@ export default function CreateGoalButton({
           placeholder="Unit"
           value={unit}
           onFocus={(e) => e.target.select()}
+          onClick={(e) => e.currentTarget.select()}
           onChange={(e) => setUnit(e.target.value)}
           required
         />

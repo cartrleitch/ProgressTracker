@@ -237,6 +237,7 @@ export default function GoalItem({
           placeholder="Goal name"
           value={name}
           onFocus={(e) => e.target.select()}
+          onClick={(e) => e.currentTarget.select()}
           onChange={(e) => setName(e.target.value)}
           required
         />
@@ -247,6 +248,7 @@ export default function GoalItem({
             placeholder="Target value"
             value={targetValue}
             onFocus={(e) => e.target.select()}
+            onClick={(e) => e.currentTarget.select()}
             onChange={(e) =>
               setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))
             }
@@ -261,6 +263,7 @@ export default function GoalItem({
             placeholder="Target value"
             value={targetValue}
             onFocus={(e) => e.target.select()}
+            onClick={(e) => e.currentTarget.select()}
             onChange={(e) => setTargetValue(Math.floor(Number(e.target.value)))}
             onKeyDown={(e) => {
               if (
@@ -283,6 +286,8 @@ export default function GoalItem({
             placeholder="Unit"
             value={unit}
             onFocus={(e) => e.target.select()}
+            onClick={(e) => e.currentTarget.select()}
+
             onChange={(e) => setUnit(e.target.value)}
             required
           />
@@ -454,6 +459,7 @@ export default function GoalItem({
               onChange={(e) => {
                 setValueToAdd(parseFloat(Number(e.target.value).toFixed(2)));
               }}
+              onClick={(e) => e.currentTarget.select()}
               onFocus={(e) => e.target.select()}
               required
             />
@@ -465,6 +471,7 @@ export default function GoalItem({
                 const newValue = currentValue + valueToAdd;
                 setCurrentValue(newValue);
                 handleSaveProgress(newValue);
+                setValueToAdd(0);
               }}
             >
               Add

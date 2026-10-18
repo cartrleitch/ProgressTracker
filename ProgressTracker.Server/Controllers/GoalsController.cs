@@ -9,6 +9,7 @@ using System.Security.Claims;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class GoalsController : ControllerBase
 {
     private readonly ProgressTrackerContext _context;
