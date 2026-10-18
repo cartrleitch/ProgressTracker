@@ -66,6 +66,35 @@ public class ProgressEntriesController : ControllerBase
             .OrderBy(p => p.Start)
             .ToList();
 
+        TimeZoneInfo timeZone;
+        try
+        {
+            timeZone = string.IsNullOrWhiteSpace(goal.TimeZoneId) ? TimeZoneInfo.Utc : TimeZoneInfo.FindSystemTimeZoneById(goal.TimeZoneId);
+
+        }
+        catch (TimeZoneNotFoundException)
+        {
+            return BadRequest($"Invalid time zone: {goal.TimeZoneId}");
+        }
+
+        var today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone));
+
+        if (today >= from && today <= to)
+        {
+            var currentPeriodStart = CalendarPeriodService.GetPeriodStart(goal.Period, today, goal.ResetDate);
+            if (currentPeriodStart != null && !periods.Any(p => p.Start == currentPeriodStart.Value))
+            {
+                periods.Add(new CalendarPeriodResponse(
+                    currentPeriodStart.Value,
+                    CalendarPeriodService.GetPeriodEnd(goal.Period, currentPeriodStart.Value, goal.ResetDate),
+                    0,
+                    target,
+                    false
+                ));
+                periods = periods.OrderBy(p => p.Start).ToList();
+            }
+        }
+
         return Ok(periods);
     }
 
