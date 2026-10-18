@@ -26,6 +26,8 @@ function getDayInfo(
 
   if (period?.completed) {
     status = "complete";
+  } else if (period && period.progress === 0) {
+    status = "missed";
   } else if (period && period.progress > 0) {
     status = "partial";
   } else if (isoDate > todayIso) {

@@ -38,10 +38,10 @@ export default function CreateGoalButton({
 
     try {
       const created = await createGoal(newGoal);
-        await createProgressEntry(created.id, {
-          localDate: localDateString(timeZoneId),
-          valueChange: 0
-        });
+      await createProgressEntry(created.id, {
+        localDate: localDateString(timeZoneId),
+        valueChange: 0,
+      });
       console.log("Created goal:", created);
       setIsFormOpen(false);
       setName("");
