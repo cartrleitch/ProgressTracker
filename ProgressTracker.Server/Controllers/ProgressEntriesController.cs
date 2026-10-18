@@ -5,6 +5,7 @@ using ProgressTracker.Server.Data;
 using ProgressTracker.Server.Models;
 using ProgressTracker.Server.Models.DTOS;
 using System.Security.Claims;
+using ProgressTracker.Server.Services;
 
 [Authorize]
 [Route("api/[controller]")]
@@ -28,18 +29,43 @@ public class ProgressEntriesController : ControllerBase
     }
 
     // GET: api/progressentries/goal/5/calendar?from=2026-01-01&to=2026-12-31
-    [HttpGet("goal/{goalId}/calendar")]
+    [HttpGet("{goalId}/calendar")]
     public async Task<ActionResult<IEnumerable<CalendarPeriodResponse>>> GetCalendar(int goalId, DateOnly from, DateOnly to)
     {
+        // Get goal for given ProgressEntry and check if it belongs to the current user
         var goal = await _context.Goals.Where(g => g.UserId == UserId && g.Id == goalId).FirstOrDefaultAsync();
         if (goal == null)
         {
             return NotFound();
         }
+        // Get all ProgressEntries for the given goal and date range
         var entries = await _context.ProgressEntries.Where(pe => pe.LinkedGoal.UserId == UserId && pe.LinkedGoal.Id == goalId && pe.LocalDate >= from && pe.LocalDate <= to).ToListAsync();
 
-        // Group entries by week (or any other period) and calculate progress
-        return Ok();
+        var target = (decimal)goal.TargetValue;
+
+        // Group entries by period start date and calculate progress for each period
+        var periods = entries.Select(e => new
+        {
+            start = CalendarPeriodService.GetPeriodStart(goal.Period, e.LocalDate, goal.ResetDate),
+            e.ValueChange
+        })
+            .Where(p => p.start != null)
+            .GroupBy(p => p.start!.Value)
+            .Select(g =>
+            {
+                var progress = g.Sum(p => p.ValueChange);
+                return new CalendarPeriodResponse(
+                  g.Key,
+                  CalendarPeriodService.GetPeriodEnd(goal.Period, g.Key, goal.ResetDate),
+                  progress,
+                  target,
+                  progress >= target
+                 );
+            })
+            .OrderBy(p => p.Start)
+            .ToList();
+
+        return Ok(periods);
     }
 
     // GET: api/progressentries/5
