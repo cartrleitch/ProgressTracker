@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import type { Goal } from "../../Types.ts";
-import { apiFetch } from "../../services/Api.ts";
+import {
+  deleteGoal,
+  updateGoal,
+  createProgressEntry,
+} from "../../services/Api.ts";
 
 export default function GoalItem({
   goal,
@@ -56,21 +60,15 @@ export default function GoalItem({
       unit,
       resetDate: resetDate || null,
       timeZoneId,
+      streak: goal.streak ?? 0,
     };
 
     try {
-      const response = await apiFetch(`/api/goals/${goal.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newGoal),
-      });
+      const updated = await updateGoal(goal.id, newGoal);
 
-      if (!response.ok) {
-        throw new Error(`Failed to update goal: ${response.status}`);
-      }
-
-      console.log("Updated goal:", newGoal);
+      console.log("Updated goal:", updated);
       toast.success("Goal updated successfully!");
+
       setIsEditing(false);
       onEdit(newGoal);
     } catch (error) {
@@ -94,15 +92,10 @@ export default function GoalItem({
     }
 
     try {
-      const response = await apiFetch(`/api/goals/${goal.id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete goal: ${response.status}`);
-      }
+      await deleteGoal(goal.id);
 
       onDelete(goal.id);
+
       toast.success("Goal deleted successfully!");
       console.log("Deleted goal:", goal.id);
     } catch (error) {
@@ -159,48 +152,29 @@ export default function GoalItem({
 
     try {
       // Update the goal's current value
-      const response = await apiFetch(`/api/goals/${goal.id}`, {
-        method: "PUT",
-
-        headers: { "Content-Type": "application/json" },
-
-        body: JSON.stringify({ ...goal, currentValue: newValue }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update goal progress: ${response.status}`);
-      }
-
-      console.log("Updated goal progress:", {
+      const updated = await updateGoal(goal.id, {
         ...goal,
         currentValue: newValue,
       });
 
+      console.log("Updated goal progress:", updated);
+
       // Create a new progress entry if the value has changed
       if (delta !== 0) {
-        const progressEntryResponse = await apiFetch(
-          `/api/progressentries?goalId=${goal.id}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              localDate: localDateString(timeZoneId),
-              valueChange: delta,
-            }),
-          },
-        );
-        if (!progressEntryResponse.ok) {
-          throw new Error(
-            `Failed to create progress entry: ${progressEntryResponse.status}`,
-          );
-        }
+        await createProgressEntry(goal.id, {
+          localDate: localDateString(timeZoneId),
+          valueChange: delta,
+        });
       }
+
       setIsSaved(true);
       setSavedCurrentValue(newValue);
       onEdit({ ...goal, currentValue: newValue });
+
       toast.success("Progress saved successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to save progress");
     }
   };
 
@@ -237,7 +211,6 @@ export default function GoalItem({
           placeholder="Goal name"
           value={name}
           onFocus={(e) => e.target.select()}
-          onClick={(e) => e.currentTarget.select()}
           onChange={(e) => setName(e.target.value)}
           required
         />

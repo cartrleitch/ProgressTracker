@@ -29,7 +29,7 @@ public class ProgressEntriesController : ControllerBase
         return await _context.ProgressEntries.Where(pe => pe.LinkedGoal.UserId == UserId).ToListAsync();
     }
 
-    // GET: api/progressentries/goal/5/calendar?from=2026-01-01&to=2026-12-31
+    // GET: api/progressentries/5/calendar?from=2026-01-01&to=2026-12-31
     [HttpGet("{goalId}/calendar")]
     public async Task<ActionResult<IEnumerable<CalendarPeriodResponse>>> GetCalendar(int goalId, DateOnly from, DateOnly to)
     {

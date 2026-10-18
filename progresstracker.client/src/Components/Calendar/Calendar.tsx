@@ -1,16 +1,9 @@
 import { useState } from "react";
-import { apiFetch } from "../../services/Api.ts";
+import { getCalendarInfo, getGoals } from "../../services/Api.ts";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
-import type { Goal } from "../../Types.ts";
+import type { Goal, CalendarPeriod } from "../../Types.ts";
 
-interface CalendarPeriod {
-  start: string;
-  end: string;
-  progress: number;
-  target: number;
-  completed: boolean;
-}
 export default function Calendar() {
   const [goalId, setGoalId] = useState("");
   const [calendarInfo, setCalendarInfo] = useState<CalendarPeriod[] | null>(
@@ -26,15 +19,7 @@ export default function Calendar() {
     const to = `${year}-12-31`;
 
     try {
-      const response = await apiFetch(
-        `/api/progressentries/${selectedGoalId}/calendar?from=${from}&to=${to}`,
-      );
-
-      if (!response.ok) {
-        throw new Error(`Request failed: ${response.status}`);
-      }
-
-      setCalendarInfo(await response.json());
+      setCalendarInfo(await getCalendarInfo(selectedGoalId, from, to));
     } catch (e) {
       setCalendarInfo(null);
       setError(e instanceof Error ? e.message : "Unknown error");
@@ -44,11 +29,7 @@ export default function Calendar() {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await apiFetch("/api/goals");
-        if (!response.ok) {
-          throw new Error(`Failed to fetch goals: ${response.status}`);
-        }
-        const data: Goal[] = await response.json();
+        const data: Goal[] = await getGoals();
         setGoals(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load goals");
@@ -60,8 +41,8 @@ export default function Calendar() {
   }, []);
 
   return (
-      <div className="calendar-container">
-          <h1>Progress Calendar</h1>
+    <div className="calendar-container">
+      <h1>Progress Calendar</h1>
       <div className="calendar-header">
         <select
           value={goalId}

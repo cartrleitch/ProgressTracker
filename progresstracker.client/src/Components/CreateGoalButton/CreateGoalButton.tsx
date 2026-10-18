@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type { Goal } from "../../Types";
 import { toast } from "react-toastify";
-import { apiFetch } from "../../services/Api";
+import { createGoal } from "../../services/Api";
 
 export default function CreateGoalButton({
   onGoalCreated,
@@ -36,18 +36,7 @@ export default function CreateGoalButton({
     };
 
     try {
-      const response = await apiFetch("/api/goals", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newGoal),
-      });
-
-      if (!response.ok) {
-        toast.error("Failed to create goal");
-        throw new Error(`Failed to create goal: ${response.status}`);
-      }
-
-      const created = await response.json();
+      const created = await createGoal(newGoal);
       console.log("Created goal:", created);
       setIsFormOpen(false);
       setName("");
