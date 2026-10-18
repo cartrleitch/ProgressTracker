@@ -6,6 +6,7 @@ import {
   updateGoal,
   createProgressEntry,
 } from "../../services/Api.ts";
+import { localDateString } from "../../services/HelperFunctions.ts";
 
 export default function GoalItem({
   goal,
@@ -136,15 +137,6 @@ export default function GoalItem({
       setIsSaved(true);
     }
   };
-
-  function localDateString(timeZoneId: string, date = new Date()) {
-    return new Intl.DateTimeFormat("en-CA", {
-      timeZone: timeZoneId,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(date);
-  }
 
   const handleSaveProgress = async (value?: number) => {
     const newValue = value ?? currentValue;

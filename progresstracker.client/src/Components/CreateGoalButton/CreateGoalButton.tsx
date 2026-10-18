@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import type { Goal } from "../../Types";
 import { toast } from "react-toastify";
-import { createGoal } from "../../services/Api";
+import { createGoal, createProgressEntry } from "../../services/Api";
+import { localDateString } from "../../services/HelperFunctions.ts";
 
 export default function CreateGoalButton({
   onGoalCreated,
@@ -37,6 +38,10 @@ export default function CreateGoalButton({
 
     try {
       const created = await createGoal(newGoal);
+        await createProgressEntry(created.id, {
+          localDate: localDateString(timeZoneId),
+          valueChange: 0
+        });
       console.log("Created goal:", created);
       setIsFormOpen(false);
       setName("");
