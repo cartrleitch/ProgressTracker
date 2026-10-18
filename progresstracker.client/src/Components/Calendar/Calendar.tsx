@@ -57,7 +57,7 @@ export default function Calendar() {
     };
 
     fetchGoals();
-  });
+  }, []);
 
   return (
       <div className="calendar-container">
