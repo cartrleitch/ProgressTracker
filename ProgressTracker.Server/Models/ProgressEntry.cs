@@ -5,8 +5,8 @@
     {
         public int Id { get; set; }
         public Goal LinkedGoal { get; set; } = null!;
-        public DateTime Date { get; set; }
-        public int ValueChange { get; set; }
+        public DateOnly LocalDate { get; set; } // The date of the progress entry in the user's local time zone.
+        public decimal ValueChange { get; set; } // The amount by which the goal's current value changed (can be positive or negative). For boolean goals, this will be 1 or -1.
 
     }
 }

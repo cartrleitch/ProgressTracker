@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import type { Goal } from "../../Types.ts";
-import { apiFetch } from "../../services/Api.ts";
+import {
+  deleteGoal,
+  updateGoal,
+  createProgressEntry,
+} from "../../services/Api.ts";
+import { localDateString } from "../../services/HelperFunctions.ts";
 
 export default function GoalItem({
   goal,
@@ -56,21 +61,15 @@ export default function GoalItem({
       unit,
       resetDate: resetDate || null,
       timeZoneId,
+      streak: goal.streak ?? 0,
     };
 
     try {
-      const response = await apiFetch(`/api/goals/${goal.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newGoal),
-      });
+      const updated = await updateGoal(goal.id, newGoal);
 
-      if (!response.ok) {
-        throw new Error(`Failed to update goal: ${response.status}`);
-      }
-
-      console.log("Updated goal:", newGoal);
+      console.log("Updated goal:", updated);
       toast.success("Goal updated successfully!");
+
       setIsEditing(false);
       onEdit(newGoal);
     } catch (error) {
@@ -94,15 +93,10 @@ export default function GoalItem({
     }
 
     try {
-      const response = await apiFetch(`/api/goals/${goal.id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete goal: ${response.status}`);
-      }
+      await deleteGoal(goal.id);
 
       onDelete(goal.id);
+
       toast.success("Goal deleted successfully!");
       console.log("Deleted goal:", goal.id);
     } catch (error) {
@@ -145,29 +139,34 @@ export default function GoalItem({
   };
 
   const handleSaveProgress = async (value?: number) => {
+    const newValue = value ?? currentValue;
+    const delta = newValue - savedCurrentValue;
+
     try {
-      const response = await apiFetch(`/api/goals/${goal.id}`, {
-        method: "PUT",
-
-        headers: { "Content-Type": "application/json" },
-
-        body: JSON.stringify({ ...goal, currentValue: value ?? currentValue }),
+      // Update the goal's current value
+      const updated = await updateGoal(goal.id, {
+        ...goal,
+        currentValue: newValue,
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to update goal progress: ${response.status}`);
+      console.log("Updated goal progress:", updated);
+
+      // Create a new progress entry if the value has changed
+      if (delta !== 0) {
+        await createProgressEntry(goal.id, {
+          localDate: localDateString(timeZoneId),
+          valueChange: delta,
+        });
       }
 
-      console.log("Updated goal progress:", {
-        ...goal,
-        currentValue: value ?? currentValue,
-      });
       setIsSaved(true);
-      setSavedCurrentValue(value ?? currentValue);
-      onEdit({ ...goal, currentValue: value ?? currentValue });
+      setSavedCurrentValue(newValue);
+      onEdit({ ...goal, currentValue: newValue });
+
       toast.success("Progress saved successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to save progress");
     }
   };
 
@@ -214,6 +213,7 @@ export default function GoalItem({
             placeholder="Target value"
             value={targetValue}
             onFocus={(e) => e.target.select()}
+            onClick={(e) => e.currentTarget.select()}
             onChange={(e) =>
               setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))
             }
@@ -228,6 +228,7 @@ export default function GoalItem({
             placeholder="Target value"
             value={targetValue}
             onFocus={(e) => e.target.select()}
+            onClick={(e) => e.currentTarget.select()}
             onChange={(e) => setTargetValue(Math.floor(Number(e.target.value)))}
             onKeyDown={(e) => {
               if (
@@ -250,6 +251,8 @@ export default function GoalItem({
             placeholder="Unit"
             value={unit}
             onFocus={(e) => e.target.select()}
+            onClick={(e) => e.currentTarget.select()}
+
             onChange={(e) => setUnit(e.target.value)}
             required
           />
@@ -421,6 +424,7 @@ export default function GoalItem({
               onChange={(e) => {
                 setValueToAdd(parseFloat(Number(e.target.value).toFixed(2)));
               }}
+              onClick={(e) => e.currentTarget.select()}
               onFocus={(e) => e.target.select()}
               required
             />
@@ -432,6 +436,7 @@ export default function GoalItem({
                 const newValue = currentValue + valueToAdd;
                 setCurrentValue(newValue);
                 handleSaveProgress(newValue);
+                setValueToAdd(0);
               }}
             >
               Add

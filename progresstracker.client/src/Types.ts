@@ -12,3 +12,14 @@ export interface Goal {
   resetDate?: string | null;
   streak?: number;
 }
+export interface CalendarPeriod {
+  start: string;
+  end: string;
+  progress: number;
+  target: number;
+  completed: boolean;
+}
+export interface ProgressEntryData {
+  localDate: string;
+  valueChange: number;
+}

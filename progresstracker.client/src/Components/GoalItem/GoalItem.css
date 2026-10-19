@@ -303,6 +303,9 @@
   background-color: #e2e8f0;
   color: #1e293b;
   user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .goal-progress-add-button:hover {
@@ -369,7 +372,7 @@
   }
 
   .goal-progress-add-elements {
-    flex: 1 1 100%;
+    flex: 1 1 50%;
     justify-content: flex-start;
   }
 
@@ -381,6 +384,18 @@
     min-width: 44px;
     min-height: 44px;
     font-size: 16px;
+  }
+  .goal-progress-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0 0.75rem;
+    line-height: 1;
+    text-align: center;
+    transition:
+      background-color 0.2s ease,
+      transform 0.1s ease;
   }
   .goal-progress-decrement-button,
   .goal-progress-increment-button {
@@ -424,5 +439,11 @@
     min-height: 44px;
     font-size: 16px;
     box-sizing: border-box;
+  }
+  .goal-progress-label-fixed {
+    flex: 1 1 100%;
+    width: auto;
+    text-align: left;
+    padding-left: 0.2rem;
   }
 }

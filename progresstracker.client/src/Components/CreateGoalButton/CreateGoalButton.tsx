@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import type { Goal } from "../../Types";
 import { toast } from "react-toastify";
-import { apiFetch } from "../../services/Api";
+import { createGoal, createProgressEntry } from "../../services/Api";
+import { localDateString } from "../../services/HelperFunctions.ts";
 
 export default function CreateGoalButton({
   onGoalCreated,
@@ -36,18 +37,11 @@ export default function CreateGoalButton({
     };
 
     try {
-      const response = await apiFetch("/api/goals", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newGoal),
+      const created = await createGoal(newGoal);
+      await createProgressEntry(created.id, {
+        localDate: localDateString(timeZoneId),
+        valueChange: 0,
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create goal: ${response.status}`);
-        toast.error("Failed to create goal");
-      }
-
-      const created = await response.json();
       console.log("Created goal:", created);
       setIsFormOpen(false);
       setName("");
@@ -94,6 +88,7 @@ export default function CreateGoalButton({
           placeholder="Target value"
           value={targetValue}
           onFocus={(e) => e.target.select()}
+          onClick={(e) => e.currentTarget.select()}
           onChange={(e) =>
             setTargetValue(parseFloat(Number(e.target.value).toFixed(2)))
           }
@@ -108,6 +103,7 @@ export default function CreateGoalButton({
           placeholder="Target value"
           value={targetValue}
           onFocus={(e) => e.target.select()}
+          onClick={(e) => e.currentTarget.select()}
           onChange={(e) => setTargetValue(Math.floor(Number(e.target.value)))}
           onKeyDown={(e) => {
             if (
@@ -130,6 +126,7 @@ export default function CreateGoalButton({
           placeholder="Unit"
           value={unit}
           onFocus={(e) => e.target.select()}
+          onClick={(e) => e.currentTarget.select()}
           onChange={(e) => setUnit(e.target.value)}
           required
         />

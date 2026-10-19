@@ -9,6 +9,7 @@ using System.Security.Claims;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class GoalsController : ControllerBase
 {
     private readonly ProgressTrackerContext _context;
@@ -122,12 +123,14 @@ public class GoalsController : ControllerBase
     public async Task<IActionResult> DeleteGoal(int? id)
     {
         var goal = await _context.Goals.Where(g => g.UserId == UserId && g.Id == id).FirstOrDefaultAsync();
+        var progressEntries = await _context.ProgressEntries.Where(pe => pe.LinkedGoal.Id == id).ToListAsync();
         if (goal == null)
         {
             return NotFound();
         }
 
         _context.Goals.Remove(goal);
+        _context.ProgressEntries.RemoveRange(progressEntries);
         await _context.SaveChangesAsync();
 
         return NoContent();
