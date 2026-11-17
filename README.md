@@ -1,4 +1,4 @@
-**Vision**  
+# Progress Tracker  
 Progress tracker app for tracking daily, weekly, monthly, and yearly progress on goals. App should encourage completing goals and building good habits as much as possible.
 
 **Tech stack**  
